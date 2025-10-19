@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:10.10.7
+    container_name: jellyfin
+    network_mode: host
+    user: 1000:1000
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Bucharest
+
+    volumes:
+      # Named volumes for persistent configuration and cache data
+      - jellyfin-config:/config
+      - jellyfin-cache:/cache
+
+      # Bind mounts for media libraries (Source:Target)
+      - /media/shitflix/shows:/shows
+      - /media/aux/shows:/aux_shows
+      - /media/shitflix/movies:/movies
+      - /media/aux/movies:/aux_movies
+
+    # Configuration for GPU passthrough
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+
+  torrent-client:
+    build:
+      context: .
+      dockerfile: Dockerfile-torrent-client
+    container_name: transmission
+    ports:
+      - "9091:9091"
+    volumes:
+      - /home/luci0/Downloads/torrent:/downloads
+      - transmission-config:/config
+    env_file:
+      - .env
+    restart: unless-stopped
+
+volumes:
+  transmission-config:
+  jellyfin-config:
+  jellyfin-cache:
