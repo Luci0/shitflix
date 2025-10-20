@@ -138,7 +138,10 @@ api_result=$(echo "$raw_result" | jq 'sort_by(.size)
 | select (.category == "Filme HD-RO" or .category == "Filme HD" or .category == "Seriale HD" or .category == "Seriale HD-RO")
 | {name, seeders, download_link, size, imdb, category, sizeInGb: (.size/1073741824)}')
 
-api_result=$(echo "$api_result" | jq --arg movieName "$movieName" 'select(.name | ascii_downcase | select(.name | test("^" + $movieName + "\\b"; "i"))')
+# Escape special regex characters from the movie name
+escapedMovieName=$(echo "$movieName" | sed -e 's/[][\\.*^$(){}?+|]/\\&/g')
+
+api_result=$(echo "$api_result" | jq --arg movieName "$escapedMovieName" 'select(.name | test("^" + $movieName + "\\b"; "i"))')
 
 if [ -z "$extraSearch" ]; then
   :
@@ -156,16 +159,19 @@ api_result=$(echo "$api_result" | jq -s)
 
 zacnt=$(echo "$api_result" | jq 'length')
 
-debug_echo "Found $zacnt results for $movieName with extra search $extraSearch"
+debug_echo "Found $zacnt results for $movieName"
 
 echo "$api_result"
 
 threshold=${FL_RESULTS_MAX_THRESHOLD:-10}
 
 if [ "$zacnt" -gt "$threshold" ] && [ "$xecute" -eq 1 ];then
+  echo ''
   echo "Error: More than $threshold results found for $movieName.
-  These is big chance that you download something else that you intended.
-  Refine your search criteria before downloading." >&2
+These is a big chance that you download something else than what you wanted.
+If you really want to download something from these results, increase FL_RESULTS_MAX_THRESHOLD in your .env file.
+Refine your search criteria before downloading." >&2
+  exit 1;
 fi
 
 if [  "$zacnt" -gt 0 ] && [ "$xecute" -eq 1 ];then
