@@ -7,5 +7,7 @@ docker images -q --filter "reference=shitflix-v2-torrent-client*" | xargs -r doc
 
 #Remove the volumes
 docker volume rm shitflix-v2_transmission-config
+docker volume rm shitflix-v2_shitflix
+
 # Rebuild and start the service
 docker-compose up --build torrent-client --force-recreate

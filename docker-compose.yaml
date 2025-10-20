@@ -39,17 +39,22 @@ services:
       - ${DOWNLOADS_DIR}:/downloads
       - ${INCOMPLETE_DIR}:/incomplete
       - transmission-config:/config
+      - shitflix:/shitflix
     env_file:
       - .env
+    secrets:
+      - filelist-api-key
+      - tmdb-api-key
     restart: unless-stopped
 
 volumes:
   transmission-config:
+  shitflix:
   jellyfin-config:
   jellyfin-cache:
 
 secrets:
   filelist-api-key:
-    file: ./filelist-api-key.txt
+    file: ./secrets/filelist-api-key.txt
   tmdb-api-key:
-    file: ./tmdb-api-key.txt
+    file: ./secrets/tmdb-api-key.txt

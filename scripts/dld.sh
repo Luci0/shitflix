@@ -16,13 +16,13 @@ fi
 usage()
 {
   cat <<EOF
-Usage: $0 -q <name> [options]
+Usage: $0 -q <title> [options]
 ENV Variables:
   FL_USERNAME              : Filelist username (required).
   DOWNLOADS_DIR            : Base download directory (required).
   FL_RESULTS_MAX_THRESHOLD : Maximum number of results allowed to auto-download (optional) (default: 10).
 Options:
-  -q <name>          : Name of the movie or show to search for (required). This is the actual search term passed to the api.
+  -q <title>         : Title of the movie or show to search for (required). This is the actual search term passed to the api.
   -Q <extra_search>  : Additional search query to filter results. (One may filter by quality here, like 1080, 4k, etc ...)
   -c <codec_search>  : Similar to -Q, but for codec specific searches. (264, 265, etc ...)
   -m                 : Set download directory to movies. ($DOWNLOADS_DIR/movies)
@@ -111,7 +111,10 @@ debug_echo "Script dir is $(realpath "$script_dir")"
 debug_echo "USING DOWNLOADS_DIR: $DOWNLOADS_DIR"
 
 #auto load secrets from secrets folder
-PASSKEY=$(tr -d '\n' < "$script_dir/../secrets/filelist-api-key.txt")
+secrets_file="$script_dir/../secrets/filelist-api-key.txt"
+if [ -f "$secrets_file" ]; then
+    PASSKEY=$(tr -d '\n' < "$secrets_file")
+fi
 
 #using docker secrets
 if [ -z "$PASSKEY" ]; then
