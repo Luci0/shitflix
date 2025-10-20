@@ -117,8 +117,8 @@ if [ -z "$error_result" ] || [ "$error_result" = "null" ];
 then
 	:
 else
-        echo "$raw_result";
-        echo 'Exiting';
+        echo "$raw_result" >&2
+        echo 'Exiting' >&2
 	exit 1;
 fi
 
