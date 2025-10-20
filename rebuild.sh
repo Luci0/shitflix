@@ -3,7 +3,7 @@
 docker-compose down torrent-client
 
 # Remove the existing image
-docker rmi $(docker images -q --filter "reference=shitflix-v2-torrent-client*")
+docker images -q --filter "reference=shitflix-v2-torrent-client*" | xargs -r docker rmi
 
 #Remove the volumes
 docker volume rm shitflix-v2_transmission-config

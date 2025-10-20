@@ -47,3 +47,9 @@ volumes:
   transmission-config:
   jellyfin-config:
   jellyfin-cache:
+
+secrets:
+  filelist-api-key:
+    file: ./filelist-api-key.txt
+  tmdb-api-key:
+    file: ./tmdb-api-key.txt
