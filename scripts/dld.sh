@@ -1,7 +1,7 @@
 #!/bin/sh
 
 xecute=0
-script_dir=$(dirname -- "$0")
+script_dir=$(realpath "$(dirname -- "$0")")
 
 if [ -z "$env_file" ]; then
   default_env_file="$script_dir/../.env"
@@ -83,7 +83,7 @@ while getopts "dmsxQ:q:f:c:" flag; do
       usage
       exit 1
     fi
-    saveDir="$DOWNLOADS_DIR"/movies;
+    saveDir=/downloads/movies;
    ;;
    s)
     if [ -n "$saveDir" ]; then
@@ -91,7 +91,7 @@ while getopts "dmsxQ:q:f:c:" flag; do
       usage
       exit 1
     fi
-    saveDir="$DOWNLOADS_DIR"/shows;
+    saveDir=/downloads/shows;
    ;;
    \?)
     echo 'Invalid option: -'"$OPTARG";
@@ -107,7 +107,7 @@ then
   exit 1;
 fi
 
-debug_echo "Script dir is $(realpath "$script_dir")"
+debug_echo "Script dir is $script_dir"
 debug_echo "USING DOWNLOADS_DIR: $DOWNLOADS_DIR"
 
 #auto load secrets from secrets folder
@@ -189,6 +189,6 @@ if [  "$zacnt" -gt 0 ] && [ "$xecute" -eq 1 ];then
     now=$(date)
     link=$(echo "$api_result" | jq -rs '.[] .[0] | .download_link' )
     echo "Starting download of $link"
-    echo "$now Downloading $movieName $link" >> "$script_dir/.."/transmission.log
-    transmission-remote -a "$link" -w "$saveDir" >> "$script_dir/.."/transmission.log
+    echo "$now Downloading $movieName $link" >> "$script_dir/transmission.log"
+    transmission-remote -a "$link" -w "$saveDir" >> "$script_dir/transmission.log"
 fi
