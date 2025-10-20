@@ -56,12 +56,12 @@ videoQuality=${WISHLIST_VIDEO_QUALITY:-1080}
   (.year > (($CRT_YEAR|tonumber)-($MAX_YEARS_OLD|tonumber)))
 )' \
 | jq -r --arg CRT_DATE "$(date +%F)" --arg VIDEO_QUALITY "$videoQuality" \
-'("m  "  + .title + "." + (.year|tostring) + "  $VIDEO_QUALITY" + "  " + $CRT_DATE)' > "$TEMP_TWISH"
+'("m  "  + .title + "." + (.year|tostring) + "  " + $VIDEO_QUALITY + "  " + $CRT_DATE)' > "$TEMP_TWISH"
 
 
 alreadyDownloaded() {
   linez="$1"
-  set -- "$linez"
+  set -- $linez
   title="$2"
   inBanlistCnt=$(grep -w "$title" "$script_dir/banlist.txt" | wc -l)
   inWishlistCnt=$(grep -w "$title" "$script_dir/wishlist.txt" | wc -l)

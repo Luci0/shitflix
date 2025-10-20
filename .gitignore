@@ -1,3 +1,6 @@
 .idea/
 .env
 secrets/
+scripts/banlist.txt
+scripts/temp_twish.txt
+scripts/wishlist.txt
