@@ -1,6 +1,17 @@
 #!/bin/sh
 
 xecute=0
+script_dir=$(dirname -- "$0")
+
+if [ -z "$env_file" ]; then
+  default_env_file="$script_dir/../.env"
+  if [ -f "$default_env_file" ]; then
+    set -a
+    . "$default_env_file"
+    set +a
+    SOURCED_DEFAULT="Sourced default .env file from $(realpath "$default_env_file")"
+  fi
+fi
 usage()
 {
   cat <<EOF
@@ -11,7 +22,7 @@ Options:
   -m                 : Set download directory to movies. ($DOWNLOADS_DIR/movies)
   -s                 : Set download directory to shows. ($DOWNLOADS_DIR/shows)
   -x                 : Execute the download of the best result.
-  -d                 : Enable debug mode. Add it first if used with -f.
+  -d                 : Enable debug mode.
   -f <path>          : Path to the .env file to source.
 EOF
 }
@@ -26,6 +37,11 @@ while getopts "dmsxQ:q:f:" flag; do
  case $flag in
    d)
     debugMode=1
+    if [ -z "$SOURCED_DEFAULT" ]; then
+      :
+    else
+      debug_echo "$SOURCED_DEFAULT"
+    fi
    ;;
    f)
     # Check if file exists at the provided path first
@@ -86,18 +102,8 @@ then
   exit 1;
 fi
 
-script_dir=$(dirname -- "$0")
-debug_echo "Script dir is $script_dir"
-
-if [ -z "$env_file" ]; then
-  default_env_file="$script_dir/../.env"
-  if [ -f "$default_env_file" ]; then
-    set -a
-    . "$default_env_file"
-    set +a
-    debug_echo "Sourced default .env file from $(realpath $default_env_file)"
-  fi
-fi
+debug_echo "Script dir is $(realpath "$script_dir")"
+debug_echo "USING DOWNLOADS_DIR: $DOWNLOADS_DIR"
 
 #auto load secrets from secrets folder
 PASSKEY=$(tr -d '\n' < "$script_dir/../secrets/filelist-api-key.txt")
@@ -144,6 +150,7 @@ if [ "$zacnt" -lt 10 ] && [  "$zacnt" -gt 0 ] && [ "$xecute" -eq 1 ];then
       echo "No -m or -s provided!";
       exit 1;
     fi
+    debug_echo "Downloading to $saveDir"
 
     now=$(date)
     link=$(echo "$api_result" | jq -rs '.[] .[0] | .download_link' )
