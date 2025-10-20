@@ -36,7 +36,8 @@ services:
     ports:
       - "9091:9091"
     volumes:
-      - /home/luci0/Downloads/torrent:/downloads
+      - ${DOWNLOADS_DIR}:/downloads
+      - ${INCOMPLETE_DIR}:/incomplete
       - transmission-config:/config
     env_file:
       - .env

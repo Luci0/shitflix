@@ -3,9 +3,9 @@ FROM alpine:3.20
 RUN addgroup -g 1000 transmission && \
     adduser -u 1000 -G transmission -D transmission && \
     apk add --no-cache transmission-cli=4.0.5-r2 transmission-daemon=4.0.5-r2 && \
-    mkdir -p /downloads /config /downloads/incomplete && \
-    chown -R transmission:transmission /downloads /config /downloads/incomplete && \
-    chmod -R 775 /downloads /config /downloads/incomplete
+    mkdir -p /downloads /config /incomplete && \
+    chown -R transmission:transmission /downloads /config /incomplete && \
+    chmod -R 775 /downloads /config /incomplete
 
 
 EXPOSE 9091
@@ -21,4 +21,4 @@ ENTRYPOINT ["transmission-daemon", \
            "--config-dir=/config", \
            "--rpc-bind-address=0.0.0.0", \
            "--download-dir=/downloads", \
-           "--incomplete-dir=/downloads/incomplete"]
+           "--incomplete-dir=/incomplete"]
