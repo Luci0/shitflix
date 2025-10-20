@@ -18,8 +18,9 @@ usage()
   cat <<EOF
 Usage: $0 -q <name> [options]
 ENV Variables:
-  FL_USERNAME       : Filelist username (required).
-  DOWNLOADS_DIR    : Base download directory (required).
+  FL_USERNAME              : Filelist username (required).
+  DOWNLOADS_DIR            : Base download directory (required).
+  FL_RESULTS_MAX_THRESHOLD : Maximum number of results allowed to auto-download (optional) (default: 10).
 Options:
   -q <name>          : Name of the movie or show to search for (required). This is the actual search term passed to the api.
   -Q <extra_search>  : Additional search query to filter results. (One may filter by quality here, like 1080, 4k, etc ...)
@@ -159,10 +160,12 @@ debug_echo "Found $zacnt results for $movieName with extra search $extraSearch"
 
 echo "$api_result"
 
-threshold=${FL_RESULTS_MAX_THRESHOLD:-20}
+threshold=${FL_RESULTS_MAX_THRESHOLD:-10}
 
 if [ "$zacnt" -gt "$threshold" ] && [ "$xecute" -eq 1 ];then
-  echo "Error: More than $threshold results found for $movieName. Refine your search criteria before downloading." >&2
+  echo "Error: More than $threshold results found for $movieName.
+  These is big chance that you download something else that you intended.
+  Refine your search criteria before downloading." >&2
 fi
 
 if [  "$zacnt" -gt 0 ] && [ "$xecute" -eq 1 ];then
