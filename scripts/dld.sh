@@ -7,6 +7,7 @@ if [ -z "$env_file" ]; then
   default_env_file="$script_dir/../.env"
   if [ -f "$default_env_file" ]; then
     set -a
+    # shellcheck source=/dev/null
     . "$default_env_file"
     set +a
     SOURCED_DEFAULT="Sourced default .env file from $(realpath "$default_env_file")"
