@@ -17,12 +17,17 @@ usage()
 {
   cat <<EOF
 Usage: $0 -q <name> [options]
+ENV Variables:
+  FL_USERNAME       : Filelist username (required).
+  DOWNLOADS_DIR    : Base download directory (required).
 Options:
-  -q <name>          : Name of the movie or show to search for (required).
-  -Q <extra_search>  : Additional search query to filter results.
+  -q <name>          : Name of the movie or show to search for (required). This is the actual search term passed to the api.
+  -Q <extra_search>  : Additional search query to filter results. (One may filter by quality here, like 1080, 4k, etc ...)
+  -c <codec_search>  : Similar to -Q, but for codec specific searches. (264, 265, etc ...)
   -m                 : Set download directory to movies. ($DOWNLOADS_DIR/movies)
   -s                 : Set download directory to shows. ($DOWNLOADS_DIR/shows)
-  -x                 : Execute the download of the best result.
+  -x                 : Execute the download of the best result. (Requires -m or -s to be set). The best result is the
+                        smallest file that matches the search criteria.
   -d                 : Enable debug mode.
   -f <path>          : Path to the .env file to source.
 EOF
@@ -34,7 +39,7 @@ debug_echo()
   fi
 }
 
-while getopts "dmsxQ:q:f:" flag; do
+while getopts "dmsxQ:q:f:c:" flag; do
  case $flag in
    d)
     debugMode=1
@@ -68,6 +73,9 @@ while getopts "dmsxQ:q:f:" flag; do
    Q)
     extraSearch=$(echo ${OPTARG} | tr '[:upper:]' '[:lower:]')
    ;;
+   c)
+       codecSearch=$(echo ${OPTARG} | tr '[:upper:]' '[:lower:]')
+   ;;
    m)
     if [ -n "$saveDir" ]; then
       echo "Error: -m and -s are mutually exclusive." >&2
@@ -90,11 +98,6 @@ while getopts "dmsxQ:q:f:" flag; do
    ;;
  esac
 done
-
-if [ -z "$extraSearch" ]
-then
-  extraSearch=$movieName
-fi
 
 if [ -z "$movieName" ]
 then
@@ -134,7 +137,19 @@ api_result=$(echo "$raw_result" | jq 'sort_by(.size)
 | select (.category == "Filme HD-RO" or .category == "Filme HD" or .category == "Seriale HD" or .category == "Seriale HD-RO")
 | {name, seeders, download_link, size, imdb, category, sizeInGb: (.size/1073741824)}')
 
-api_result=$(echo "$api_result" | jq --arg extraSearch "$extraSearch" --arg movieName "$movieName" 'select(.name | ascii_downcase | contains($extraSearch)) | select(.name | test("^" + $movieName + "\\b"; "i"))')
+api_result=$(echo "$api_result" | jq --arg movieName "$movieName" 'select(.name | ascii_downcase | select(.name | test("^" + $movieName + "\\b"; "i"))')
+
+if [ -z "$extraSearch" ]; then
+  :
+else
+  api_result=$(echo "$api_result" | jq --arg extraSearch "$extraSearch" 'select(.name | ascii_downcase | contains($extraSearch))')
+fi
+
+if [ -z "$codecSearch" ]; then
+  :
+else
+  api_result=$(echo "$api_result" | jq --arg codecSearch "$codecSearch" 'select(.name | ascii_downcase | contains($codecSearch))')
+fi
 
 api_result=$(echo "$api_result" | jq -s)
 
@@ -144,11 +159,17 @@ debug_echo "Found $zacnt results for $movieName with extra search $extraSearch"
 
 echo "$api_result"
 
-if [ "$zacnt" -lt 10 ] && [  "$zacnt" -gt 0 ] && [ "$xecute" -eq 1 ];then
+threshold=${FL_RESULTS_MAX_THRESHOLD:-20}
+
+if [ "$zacnt" -gt "$threshold" ] && [ "$xecute" -eq 1 ];then
+  echo "Error: More than $threshold results found for $movieName. Refine your search criteria before downloading." >&2
+fi
+
+if [  "$zacnt" -gt 0 ] && [ "$xecute" -eq 1 ];then
 
     if [ -z "$saveDir" ]
     then
-      echo "No -m or -s provided!";
+      echo "Error: -x passed but no -m or -s provided!" >&2
       exit 1;
     fi
     debug_echo "Downloading to $saveDir"
