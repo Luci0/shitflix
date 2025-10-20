@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   jellyfin:
@@ -33,6 +32,7 @@ services:
       context: .
       dockerfile: Dockerfile-torrent-client
     container_name: transmission
+    user: 1000:1000
     ports:
       - "9091:9091"
     volumes:
