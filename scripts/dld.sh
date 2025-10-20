@@ -169,7 +169,7 @@ if [ "$zacnt" -gt "$threshold" ] && [ "$xecute" -eq 1 ];then
   echo ''
   echo "Error: More than $threshold results found for $movieName.
 These is a big chance that you download something else than what you wanted.
-If you really want to download something from these results, increase FL_RESULTS_MAX_THRESHOLD in your .env file.
+If you really want to download something from these results, increase the value of FL_RESULTS_MAX_THRESHOLD.
 Refine your search criteria before downloading." >&2
   exit 1;
 fi
