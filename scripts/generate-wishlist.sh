@@ -43,18 +43,19 @@ TWISH=$script_dir/txts/wishlist.txt
 [ ! -f "$script_dir/txts/banlist.txt" ] && touch "$script_dir/txts/banlist.txt"
 
 crtyear=$(date +%Y)
-echo "min release year is $crtyear"
 
 minVoteAverage=${TMDB_MIN_VOTE_AVERAGE:-6.1}
 maxYearsOld=${TMDB_MAX_YEARS_OLD:-2}
 videoQuality=${WISHLIST_VIDEO_QUALITY:-1080}
+
+echo "min release year is $((crtyear - maxYearsOld))"
 
 "$script_dir/tmdb.sh" \
 | jq --arg CRT_YEAR "$crtyear" --arg MIN_VOTE_AVERAGE "$minVoteAverage" --arg MAX_YEARS_OLD "$maxYearsOld" \
 'select(
   (.vote_average > ($MIN_VOTE_AVERAGE|tonumber)) and
   (.vote_count > 1) and
-  (.year > (($CRT_YEAR|tonumber)-($MAX_YEARS_OLD|tonumber)))
+  (.year >= (($CRT_YEAR|tonumber)-($MAX_YEARS_OLD|tonumber)))
 )' \
 | jq -r --arg CRT_DATE "$(date +%F)" --arg VIDEO_QUALITY "$videoQuality" \
 '("m  "  + .title + "." + (.year|tostring) + "  " + $VIDEO_QUALITY + "  " + $CRT_DATE)' > "$TEMP_TWISH"
@@ -77,7 +78,7 @@ do
   line=$(echo "$line" | tr -d '\047') #unquote names
   cnt=$(alreadyDownloaded "$line")
   if [ "$cnt" -gt 0 ]; then
-	echo "$line already found in wishlist or banlist $cnt"
+	echo "$line already found in wishlist or banlist ($cnt)"
   fi
   if [ "$cnt" -eq 0 ]; then
 	echo "Added $line to wishlist $TWISH"
