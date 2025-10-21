@@ -6,5 +6,5 @@ scripts/txts/banlist.txt
 scripts/txts/temp_twish.txt
 scripts/txts/wishlist.txt
 
-script/logs/cron.log
-script/logs/error.log
+scripts/logs/crons.log
+scripts/logs/transmission.log
