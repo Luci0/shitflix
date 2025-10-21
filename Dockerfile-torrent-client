@@ -1,25 +1,21 @@
 FROM alpine:3.20
 
-RUN addgroup -g 1000 transmission && \
-    adduser -u 1000 -G transmission -D transmission && \
-    apk add --no-cache transmission-cli=4.0.5-r2 transmission-daemon=4.0.5-r2 transmission-remote=4.0.5-r2 curl jq && \
+RUN addgroup -g 1000 shitflix && \
+    adduser -u 1000 -G shitflix -D shitflix && \
+    apk add --no-cache tzdata transmission-cli=4.0.5-r2 transmission-daemon=4.0.5-r2 \
+      transmission-remote=4.0.5-r2 curl jq cronie su-exec && \
     mkdir -p /downloads /config /incomplete /shitflix && \
-    chown -R transmission:transmission /downloads /config /incomplete /shitflix && \
+    chown -R shitflix:shitflix /downloads /config /incomplete /shitflix && \
     chmod -R 775 /downloads /config /incomplete /shitflix
 
-COPY ./scripts /shitflix
+COPY ./scripts /shitflix/scripts
+RUN chmod +x /shitflix/scripts/entrypoint.sh
+# Set a default cron schedule
+ENV RUNNER_CRON_SCHEDULE="0 3 * * *"
 
 EXPOSE 9091
 
 VOLUME ["/downloads", "/config", "/incomplete", "/shitflix"]
 
-# 2. Set the default user in the image to the user we created (1000)
-USER 1000
-
-ENTRYPOINT ["transmission-daemon", \
-           "--foreground", \
-           "--allowed=*.*.*.*", \
-           "--config-dir=/config", \
-           "--rpc-bind-address=0.0.0.0", \
-           "--download-dir=/downloads", \
-           "--incomplete-dir=/incomplete"]
+# The entrypoint will run as root to set up cron, then switch to the 'shitflix' user.
+ENTRYPOINT ["/shitflix/scripts/entrypoint.sh"]

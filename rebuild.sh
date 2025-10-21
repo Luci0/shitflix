@@ -10,4 +10,4 @@ docker volume rm shitflix_transmission-config
 docker volume rm shitflix_shitflix
 
 # Rebuild and start the service
-docker-compose up --build torrent-client --force-recreate
+docker-compose up --build --force-recreate torrent-client
