@@ -5,7 +5,8 @@ usage()
   cat <<EOF
 
 Creates a wishlist of movies to download based on TMDB data.
-See wishlist.txt file.
+It will append to an existing wishlist.
+See ./txts/wishlist.txt file.
 
 Usage: $0
 
@@ -85,3 +86,4 @@ do
 done < "$TEMP_TWISH"
 
 "$script_dir/remove-duplicates.sh" "$TWISH"
+rm -f "$TEMP_TWISH"

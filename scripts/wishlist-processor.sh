@@ -42,7 +42,6 @@ do
     shift
     quality="$1"
 
-    echo '===========START==========='
     echo "Processing: $query $quality"
     echo "Processing: $query" >> "$script_dir/logs/crons.log"
     result=$("$script_dir/dld.sh" -q "$query" -Q "$quality")
@@ -65,7 +64,7 @@ do
       echo "$line" >> "$temp_file"
     fi
 
-    echo '===========END==========='
+    echo '------------------------------------'
 done < "$file"
 
 # If the loop completes successfully, replace the original file.
