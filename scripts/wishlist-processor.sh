@@ -36,7 +36,7 @@ do
     # Process each line here
     # shellcheck disable=SC2086
     set -- $line
-    id="$1"
+    type="$1"
     shift
     query="$1"
     shift
@@ -52,11 +52,12 @@ do
     resultCount=$(echo "${result}" | jq 'length')
     resultCount=${resultCount:-0}
 
+    echo "Found $resultCount results for $query $quality"
     echo "$resultCount $query" >> "$script_dir/logs/crons.log"
 
     if [ "$resultCount" -lt 10 ] && [ "$resultCount" -gt 0 ]; then
-      "$script_dir/dld.sh" "-$id" -x -q "$query" -Q "$quality"
-      echo 'Download added. Removing from wishlist ...'
+      "$script_dir/dld.sh" "-$type" -x -q "$query" -Q "$quality" > /dev/null
+      echo 'Download added. Removing from wishlist & adding to banlist.'
       echo "$line" >> "$script_dir/txts/banlist.txt"
       "$script_dir/remove-duplicates.sh" "$script_dir/txts/banlist.txt"
     else
