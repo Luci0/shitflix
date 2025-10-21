@@ -33,3 +33,22 @@ Finally, uncomment this section in the `docker-compose.yml` file:
                   devices:
                     - capabilities: [gpu]
 ```
+### Adding other directories to jellyfin
+To add other directories to jellyfin, you need to modify the `docker-compose.yaml` file
+and add additional volume mounts under the `jellyfin` service.
+
+Example:
+```yaml
+    volumes:
+      # Named volumes for persistent configuration and cache data
+      - jellyfin-config:/config
+      - jellyfin-cache:/cache
+
+      # Bind mounts for media libraries (Source:Target)
+      - ${DOWNLOADS_DIR}/shows:/shows
+      - ${DOWNLOADS_DIR}/movies:/movies
+      
+      # New directories can be added here
+      - /path/to/your/media:/media
+      - /another/path/to/media:/moremedia
+```
