@@ -34,12 +34,12 @@ done
 
 script_dir=$(realpath "$(dirname -- "$0")")
 
-TEMP_TWISH=$script_dir/temp_twish.txt
-TWISH=$script_dir/wishlist.txt
+TEMP_TWISH=$script_dir/txts/temp_twish.txt
+TWISH=$script_dir/txts/wishlist.txt
 
-[ ! -f "$script_dir/temp_twish.txt" ] && touch "$script_dir/temp_twish.txt"
-[ ! -f "$script_dir/wishlist.txt" ] && touch "$script_dir/wishlist.txt"
-[ ! -f "$script_dir/banlist.txt" ] && touch "$script_dir/banlist.txt"
+[ ! -f "$script_dir/txts/temp_twish.txt" ] && touch "$script_dir/txts/temp_twish.txt"
+[ ! -f "$script_dir/txts/wishlist.txt" ] && touch "$script_dir/txts/wishlist.txt"
+[ ! -f "$script_dir/txts/banlist.txt" ] && touch "$script_dir/txts/banlist.txt"
 
 crtyear=$(date +%Y)
 echo "min release year is $crtyear"
@@ -63,13 +63,13 @@ alreadyDownloaded() {
   linez="$1"
   set -- $linez
   title="$2"
-  inBanlistCnt=$(grep -w "$title" "$script_dir/banlist.txt" | wc -l)
-  inWishlistCnt=$(grep -w "$title" "$script_dir/wishlist.txt" | wc -l)
+  inBanlistCnt=$(grep -w "$title" "$script_dir/txts/banlist.txt" | wc -l)
+  inWishlistCnt=$(grep -w "$title" "$script_dir/txts/wishlist.txt" | wc -l)
   max=$([ "$inBanlistCnt" -gt "$inWishlistCnt" ] && echo "$inBanlistCnt" || echo "$inWishlistCnt")
   echo "$max"
 }
 
-"$script_dir/remove_duplicate.sh" "$TEMP_TWISH"
+"$script_dir/remove-duplicates.sh" "$TEMP_TWISH"
 
 while IFS= read -r line
 do
@@ -84,4 +84,4 @@ do
   fi
 done < "$TEMP_TWISH"
 
-"$script_dir/remove_duplicate.sh" "$TWISH"
+"$script_dir/remove-duplicates.sh" "$TWISH"

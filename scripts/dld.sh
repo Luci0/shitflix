@@ -188,7 +188,9 @@ if [  "$zacnt" -gt 0 ] && [ "$xecute" -eq 1 ];then
 
     now=$(date)
     link=$(echo "$api_result" | jq -rs '.[] .[0] | .download_link' )
-    echo "Starting download of $link"
-    echo "$now Downloading $movieName $link" >> "$script_dir/transmission.log"
-    transmission-remote -a "$link" -w "$saveDir" >> "$script_dir/transmission.log"
+    torrentName=$(echo "$api_result" | jq -rs '.[] .[0] | .name' )
+
+    echo "Starting download of $torrentName => $link"
+    echo "$now Downloading $movieName $link" >> "$script_dir/logs/transmission.log"
+    transmission-remote -a "$link" -w "$saveDir" >> "$script_dir/logs/transmission.log"
 fi
