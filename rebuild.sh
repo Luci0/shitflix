@@ -9,5 +9,8 @@ docker images -q --filter "reference=shitflix-torrent-client*" | xargs -r docker
 docker volume rm shitflix_transmission-config
 docker volume rm shitflix_shitflix
 
+docker volume rm shitflix_jellyfin-config
+docker volume rm shitflix_jellyfin-cache
+
 # Rebuild and start the service
 docker-compose up --build --force-recreate torrent-client
