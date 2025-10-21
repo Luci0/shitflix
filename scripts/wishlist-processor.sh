@@ -54,7 +54,9 @@ do
     echo "Found $resultCount results for $query $quality"
     echo "$resultCount $query" >> "$script_dir/logs/crons.log"
 
-    if [ "$resultCount" -lt 10 ] && [ "$resultCount" -gt 0 ]; then
+    threshold=${FL_RESULTS_MAX_THRESHOLD:-10}
+
+    if [ "$resultCount" -le "$threshold" ] && [ "$resultCount" -gt 0 ]; then
       "$script_dir/dld.sh" "-$type" -x -q "$query" -Q "$quality" > /dev/null
       echo 'Download added. Removing from wishlist & adding to banlist.'
       echo "$line" >> "$script_dir/txts/banlist.txt"
