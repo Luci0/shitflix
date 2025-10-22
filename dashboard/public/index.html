@@ -89,7 +89,7 @@
             <button class="close-wishlist-btn">&times;</button>
         </div>
         <div class="wishlist-body">
-            <textarea id="wishlist-content" readonly></textarea>
+            <div id="wishlist-content"></div>
         </div>
     </div>
 </div>
@@ -209,28 +209,53 @@
     document.getElementById('wishlist-btn').addEventListener('click', function() {
         // Fetch wishlist content
         fetch('/get-wishlist')
-            .then(response => response.text())
+            .then(response => response.json())
             .then(data => {
-                document.getElementById('wishlist-content').value = data;
+                const wishlistContent = document.getElementById('wishlist-content');
+
+                if (data.length === 0) {
+                    wishlistContent.innerHTML = '<div class="wishlist-empty">No items in wishlist</div>';
+                } else {
+                    let tableHtml = `
+                    <table class="wishlist-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Name</th>
+                                <th>Quality</th>
+                                <th>Date Added</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                    data.forEach(item => {
+                        tableHtml += `
+                        <tr>
+                            <td class="wishlist-type">${item.type === 'm' ? '🎬 Movie' : '📺 Series'}</td>
+                            <td class="wishlist-name">${item.name.replace(/\./g, ' ')}</td>
+                            <td class="wishlist-quality">${item.quality}p</td>
+                            <td class="wishlist-date">${item.dateAdded}</td>
+                        </tr>
+                    `;
+                    });
+
+                    tableHtml += `
+                        </tbody>
+                    </table>
+                `;
+
+                    wishlistContent.innerHTML = tableHtml;
+                }
+
                 document.getElementById('wishlist-modal').classList.add('show');
             })
             .catch(error => {
-                document.getElementById('wishlist-content').value = 'Error loading wishlist';
+                document.getElementById('wishlist-content').innerHTML = '<div class="wishlist-error">Error loading wishlist</div>';
                 document.getElementById('wishlist-modal').classList.add('show');
             });
     });
 
-    // Close wishlist modal
-    document.querySelector('.close-wishlist-btn').addEventListener('click', function() {
-        document.getElementById('wishlist-modal').classList.remove('show');
-    });
-
-    // Close modal when clicking outside
-    document.getElementById('wishlist-modal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.classList.remove('show');
-        }
-    });
 
 </script>
 </body>

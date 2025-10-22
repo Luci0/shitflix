@@ -112,11 +112,26 @@ app.get('/get-wishlist', async (req, res) => {
     try {
         const wishlistPath = '/shitflix/scripts/txts/wishlist.txt';
         const content = await fs.readFile(wishlistPath, 'utf8');
-        res.type('text/plain');
-        res.send(content);
+
+        // Parse the wishlist file
+        const lines = content.trim().split('\n');
+        const wishlistItems = lines.map(line => {
+            const parts = line.trim().split(/\s+/);
+            if (parts.length >= 4) {
+                return {
+                    type: parts[0],
+                    name: parts[1],
+                    quality: parts[2],
+                    dateAdded: parts[3]
+                };
+            }
+            return null;
+        }).filter(item => item !== null);
+
+        res.json(wishlistItems);
     } catch (error) {
         console.error('Error reading wishlist:', error);
-        res.status(500).send('Unable to load wishlist');
+        res.status(500).json([]);
     }
 });
 
