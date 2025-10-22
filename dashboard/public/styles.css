@@ -227,3 +227,15 @@ input[type="text"]::placeholder {
 ::-webkit-scrollbar-thumb:hover {
     background: #444;
 }
+
+/* Center the download column header and content */
+.results-table th:last-child,
+.results-table td:last-child {
+    text-align: center;
+}
+
+/* Optional: ensure download buttons are inline and centered */
+.results-table td:last-child .download-btn {
+    display: inline-block;
+    margin: 0 2px;
+}

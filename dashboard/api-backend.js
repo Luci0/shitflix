@@ -69,7 +69,7 @@ app.get('/get-search-results', (req, res) => {
                         <th>Seeders</th>
                         <th>Category</th>
                         <th>IMDB</th>
-                        <th>Action</th>
+                        <th>📥</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,14 +93,14 @@ app.get('/get-search-results', (req, res) => {
                                 hx-trigger="click"
                                 hx-swap="innerHTML"
                                 hx-target="#download-result-container">
-                            📥 🎬
+                            🎬
                         </button>
                         <button class="download-btn"
                                 hx-get="${showsHxGetDldLink}"
                                 hx-trigger="click"
                                 hx-swap="innerHTML"
                                 hx-target="#download-result-container">
-                            📥 📺
+                            📺
                         </button>
                     </td>
                 </tr>

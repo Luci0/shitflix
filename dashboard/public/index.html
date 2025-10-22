@@ -4,23 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shitflix Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="/icons/favicon.png">
     <script src="https://unpkg.com/htmx.org"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="container">
-    <h1>🎬 Shitflix Dashboard</h1>
+    <h1>
+        <img src="/icons/favicon.png" alt="Downloader icon"
+             style="height: 1.2em;
+             vertical-align: middle;
+             margin-right: 0.2em;">
+        Downloader
+    </h1>
+
 
     <div class="search-form">
         <form onsubmit="return false;">
             <div class="form-group">
                 <label for="movie">Movie Name</label>
-                <input type="text" id="movie" name="movie" placeholder="Enter movie name..." />
+                <input type="text" id="movie" name="movie" placeholder="Enter movie name..."/>
             </div>
 
             <div class="form-group">
                 <label for="extra">Extra Search Params</label>
-                <input type="text" id="extra" name="extra" value="1080" placeholder="Quality, year, etc..." />
+                <input type="text" id="extra" name="extra" value="1080" placeholder="Quality, year, etc..."/>
             </div>
 
             <button class="search-btn"
@@ -49,7 +57,7 @@
 
 <script>
     // Auto-replace spaces with dots as user types
-    document.getElementById('movie').addEventListener('input', function(e) {
+    document.getElementById('movie').addEventListener('input', function (e) {
         const cursorPosition = e.target.selectionStart;
         const originalValue = e.target.value;
         const newValue = originalValue.replace(/\s+/g, '.');
@@ -62,7 +70,7 @@
         }
     });
 
-    document.getElementById('extra').addEventListener('input', function(e) {
+    document.getElementById('extra').addEventListener('input', function (e) {
         const cursorPosition = e.target.selectionStart;
         const originalValue = e.target.value;
         const newValue = originalValue.replace(/\s+/g, '.');
@@ -90,12 +98,12 @@
     }
 
     // Listen for htmx after-swap event to scroll to results
-    document.body.addEventListener('htmx:afterSwap', function(evt) {
+    document.body.addEventListener('htmx:afterSwap', function (evt) {
         if (evt.detail.target.id === 'search-results-container') {
             // Smooth scroll to results
             const resultsContainer = document.getElementById('search-results-container');
             if (resultsContainer && resultsContainer.innerHTML.trim() !== '') {
-                resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                resultsContainer.scrollIntoView({behavior: 'smooth', block: 'nearest'});
             }
         }
     });
