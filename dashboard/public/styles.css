@@ -975,3 +975,26 @@ input[type="text"]::placeholder {
     width: 100px;
 }
 
+.banlist-description {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 1.5rem;
+    color: #b0b0b0;
+    line-height: 1.6;
+}
+
+.banlist-description p {
+    margin: 0.5rem 0;
+}
+
+.banlist-description p:first-child {
+    margin-top: 0;
+    font-weight: 600;
+}
+
+.banlist-description strong {
+    color: #e0e0e0;
+}
+
