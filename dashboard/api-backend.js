@@ -37,17 +37,20 @@ app.get('/get-search-results', (req, res) => {
     const movie = (req.query.movie ?? '').replace(/\s+/g, '.')
     const extra = (req.query.extra ?? '').replace(/\s+/g, '.')
 
-    console.log('Searching for movie:', movie, 'with extra:', extra)
-
     // Use array form to properly handle special characters
-    let dldScript = spawnSync(dldScriptPath, ['-q', movie, '-Q', extra], {
+    let cmdArray = ['-q', movie];
+    if (extra) {
+        cmdArray.push('-Q', extra);
+    }
+
+    let dldScript = spawnSync(dldScriptPath, cmdArray, {
         encoding: 'utf8'
     })
 
-    console.log('Command:', dldScriptPath, '-q', movie, '-Q', extra)
+    console.log('Command:', dldScriptPath, cmdArray)
     let responseText = dldScript.stdout
 
-    console.log('Response =======>' + responseText)
+    console.log(responseText)
 
     try {
         const results = JSON.parse(responseText);
