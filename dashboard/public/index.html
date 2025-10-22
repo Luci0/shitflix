@@ -88,6 +88,17 @@
             <h2>📝 Movie Wishlist</h2>
             <button class="close-wishlist-btn">&times;</button>
         </div>
+        <div class="wishlist-add-section">
+            <div class="add-form-row">
+                <select id="add-type" class="add-input">
+                    <option value="m">🎬 Movie</option>
+                    <option value="s">📺 Series</option>
+                </select>
+                <input type="text" id="add-name" class="add-input" placeholder="Movie.Name.Here">
+                <input type="text" id="add-quality" class="add-input add-quality" placeholder="1080" value="1080">
+                <button id="add-wishlist-btn" class="add-btn">➕ Add</button>
+            </div>
+        </div>
         <div class="wishlist-body">
             <div id="wishlist-content"></div>
         </div>
@@ -206,7 +217,7 @@
     });
 
     // Wishlist modal handling
-    document.getElementById('wishlist-btn').addEventListener('click', function() {
+    document.getElementById('wishlist-btn').addEventListener('click', function () {
         loadWishlist();
     });
 
@@ -258,11 +269,12 @@
 
                     // Add event listeners to delete buttons
                     document.querySelectorAll('.delete-wishlist-btn').forEach(btn => {
-                        btn.addEventListener('click', function() {
+                        btn.addEventListener('click', function () {
                             const index = this.dataset.index;
                             const name = this.dataset.name;
 
-                            if (confirm(`Delete "${name.replace(/\./g, ' ')}" from wishlist?`)) {
+                            if (confirm(`Delete
+                            "${name.replace(/\./g, ' ')}" from wishlist?`)) {
                                 deleteWishlistItem(index);
                             }
                         });
@@ -283,7 +295,7 @@
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ index: parseInt(index) })
+            body: JSON.stringify({index: parseInt(index)})
         })
             .then(response => response.json())
             .then(data => {
@@ -301,14 +313,95 @@
     }
 
     // Close wishlist modal
-    document.querySelector('.close-wishlist-btn').addEventListener('click', function() {
+    document.querySelector('.close-wishlist-btn').addEventListener('click', function () {
         document.getElementById('wishlist-modal').classList.remove('show');
     });
 
     // Close modal when clicking outside
-    document.getElementById('wishlist-modal').addEventListener('click', function(e) {
+    document.getElementById('wishlist-modal').addEventListener('click', function (e) {
         if (e.target === this) {
             this.classList.remove('show');
+        }
+    });
+
+    function addWishlistItem() {
+        const type = document.getElementById('add-type').value;
+        const name = document.getElementById('add-name').value.replace(/\s+/g, '.');
+        const quality = document.getElementById('add-quality').value;
+
+        if (!name.trim()) {
+            alert('Please enter a movie/series name');
+            return;
+        }
+
+        const newItem = {
+            type: type,
+            name: name,
+            quality: quality
+        };
+
+        fetch('/add-wishlist-item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newItem)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Clear the input fields
+                    document.getElementById('add-name').value = '';
+                    document.getElementById('add-quality').value = '1080';
+
+                    // Reload the wishlist
+                    loadWishlist();
+                } else {
+                    alert('Error adding item to wishlist');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error adding item to wishlist');
+            });
+    }
+
+    // Add event listener for the add button
+    document.getElementById('wishlist-btn').addEventListener('click', function () {
+        loadWishlist();
+
+        // Set up the add button listener when modal opens
+        setTimeout(() => {
+            const addBtn = document.getElementById('add-wishlist-btn');
+            if (addBtn && !addBtn.hasListener) {
+                addBtn.addEventListener('click', addWishlistItem);
+                addBtn.hasListener = true;
+
+                // Also add enter key support for the name input
+                document.getElementById('add-name').addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        addWishlistItem();
+                    }
+                });
+            }
+        }, 100);
+    });
+
+    // Auto-replace spaces with dots in the add name field
+    document.addEventListener('DOMContentLoaded', function () {
+        const addNameInput = document.getElementById('add-name');
+        if (addNameInput) {
+            addNameInput.addEventListener('input', function (e) {
+                const cursorPosition = e.target.selectionStart;
+                const originalValue = e.target.value;
+                const newValue = originalValue.replace(/\s+/g, '.');
+
+                if (originalValue !== newValue) {
+                    e.target.value = newValue;
+                    const newCursorPosition = cursorPosition - (originalValue.length - newValue.length);
+                    e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+                }
+            });
         }
     });
 

@@ -163,5 +163,32 @@ app.post('/delete-wishlist-item', async (req, res) => {
     }
 });
 
+app.post('/add-wishlist-item', async (req, res) => {
+    try {
+        const { type, name, quality } = req.body;
+        const wishlistPath = '/shitflix/scripts/txts/wishlist.txt';
+
+        // Validate input
+        if (!type || !name || !quality) {
+            return res.status(400).json({ success: false, message: 'Missing required fields' });
+        }
+
+        // Get current date in YYYY-MM-DD format
+        const today = new Date().toISOString().split('T')[0];
+
+        // Create the new line
+        const newLine = `${type}  ${name}  ${quality}  ${today}\n`;
+
+        // Append to file
+        await fs.appendFile(wishlistPath, newLine, 'utf8');
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error adding wishlist item:', error);
+        res.status(500).json({ success: false, message: 'Failed to add item' });
+    }
+});
+
+
 app.listen(port);
 console.log('Dashboard started at http://localhost:' + port);
