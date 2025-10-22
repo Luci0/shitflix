@@ -16,9 +16,13 @@ app.get('/', function (req, res) {
 app.get('/download-torrent', (req, res) => {
     let downloadLink = req.query.link;
     let movieName = req.query.name;
+    let type = req.query.type;
     console.log(downloadLink);
 
-    let downloadScript = spawnSync('transmission-remote', ['-a', downloadLink], {encoding: 'utf8'})
+    let saveDir = type === 'm' ? '/downloads/movies' : '/downloads/shows';
+
+    let downloadScript = spawnSync('transmission-remote',
+        ['-w', saveDir, '-a', downloadLink], {encoding: 'utf8'})
     console.log(downloadScript.stdout)
     console.log(downloadScript.stderr)
     if (downloadScript.stderr) {
@@ -72,7 +76,8 @@ app.get('/get-search-results', (req, res) => {
         `;
 
         results.forEach(item => {
-            const hxGetDldLink = `/download-torrent?name=${encodeURIComponent(item.name)}&link=${encodeURIComponent(item.download_link)}`;
+            const moviesHxGetDldLink = `/download-torrent?type=m&name=${encodeURIComponent(item.name)}&link=${encodeURIComponent(item.download_link)}`;
+            const showsHxGetDldLink = `/download-torrent?type=s&name=${encodeURIComponent(item.name)}&link=${encodeURIComponent(item.download_link)}`;
             const imdbLink = item.imdb ? `<a href="https://www.imdb.com/title/${item.imdb}" target="_blank" class="imdb-link">IMDb</a>` : '-';
 
             tableHtml += `
@@ -84,11 +89,18 @@ app.get('/get-search-results', (req, res) => {
                     <td>${imdbLink}</td>
                     <td>
                         <button class="download-btn"
-                                hx-get="${hxGetDldLink}"
+                                hx-get="${moviesHxGetDldLink}"
                                 hx-trigger="click"
                                 hx-swap="innerHTML"
                                 hx-target="#download-result-container">
-                            📥 Download
+                            📥 🎬
+                        </button>
+                        <button class="download-btn"
+                                hx-get="${showsHxGetDldLink}"
+                                hx-trigger="click"
+                                hx-swap="innerHTML"
+                                hx-target="#download-result-container">
+                            📥 📺
                         </button>
                     </td>
                 </tr>
