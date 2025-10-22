@@ -215,4 +215,4 @@ app.post('/add-wishlist-item', async (req, res) => {
 
 
 app.listen(port);
-console.log('Dashboard started at http://localhost:' + port);
+console.log(`Dashboard started at http://${process.env.HOSTNAME || 'localhost'}:${port}`);

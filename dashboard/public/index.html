@@ -19,10 +19,10 @@
     </h1>
 
     <div class="service-buttons">
-        <button onclick="window.open('http://localhost:8096', '_blank')" class="service-btn jellyfin-btn">
+        <button onclick="openService(8096)" class="service-btn jellyfin-btn">
             🎬 Jellyfin
         </button>
-        <button onclick="window.open('http://localhost:9091', '_blank')" class="service-btn transmission-btn">
+        <button onclick="openService(9091)" class="service-btn transmission-btn">
             ⚙️ Transmission
         </button>
         <button id="wishlist-btn" class="service-btn wishlist-btn">
@@ -103,6 +103,10 @@
     </div>
 </div>
 <script>
+    function openService(port) {
+        const host = window.location.hostname;
+        window.open(`http://${host}:${port}`, '_blank');
+    }
     // Auto-replace spaces with dots as user types
     document.getElementById('movie').addEventListener('input', function (e) {
         const cursorPosition = e.target.selectionStart;
