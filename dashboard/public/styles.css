@@ -1,0 +1,229 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0f0f0f;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #1a1a1a;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    padding: 2rem;
+    border: 1px solid #2a2a2a;
+}
+
+h1 {
+    color: #fff;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea 0%, #a855f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.search-form {
+    background: #242424;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    border: 1px solid #333;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    color: #b0b0b0;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #e0e0e0;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: #667eea;
+    background: #1f1f1f;
+}
+
+input[type="text"]::placeholder {
+    color: #666;
+}
+
+.search-btn {
+    background: linear-gradient(135deg, #667eea 0%, #a855f7 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+}
+
+#download-result-container {
+    background: #1a3a1a;
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    color: #4caf50;
+    font-weight: 600;
+    display: none;
+}
+
+#download-result-container:not(:empty) {
+    display: block;
+}
+
+.results-header {
+    font-size: 1.3rem;
+    color: #e0e0e0;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #242424;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.results-count {
+    color: #a855f7;
+    font-weight: 700;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.results-table th {
+    background: #2a2a2a;
+    color: #b0b0b0;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #333;
+}
+
+.results-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #2a2a2a;
+    color: #d0d0d0;
+}
+
+.results-table tr:hover {
+    background: #242424;
+}
+
+.movie-name {
+    font-weight: 600;
+    color: #e0e0e0;
+    max-width: 400px;
+    word-break: break-word;
+}
+
+.seeders {
+    color: #4caf50;
+    font-weight: 600;
+}
+
+.size {
+    color: #999;
+}
+
+.category {
+    background: #2a3f5f;
+    color: #64b5f6;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    display: inline-block;
+    border: 1px solid #3a4f6f;
+}
+
+.imdb-link {
+    color: #f5c518;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.imdb-link:hover {
+    text-decoration: underline;
+    color: #ffd54f;
+}
+
+.download-btn {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.download-btn:hover {
+    background: #45a049;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.no-results {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+    font-size: 1.2rem;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #a855f7;
+    font-size: 1.2rem;
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
