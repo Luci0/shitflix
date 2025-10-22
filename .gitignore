@@ -8,3 +8,5 @@ scripts/txts/wishlist.txt
 
 scripts/logs/crons.log
 scripts/logs/transmission.log
+
+dashboard/node_modules

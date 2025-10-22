@@ -32,6 +32,7 @@ services:
     container_name: transmission
     ports:
       - "9091:9091"
+      - "3333:3333"
     volumes:
       - ${DOWNLOADS_DIR}:/downloads
       - ${INCOMPLETE_DIR}:/incomplete

@@ -33,6 +33,9 @@ crond -f &
 # Tail the cron log to container stdout in background
 tail -F /var/log/cron.log 2>/dev/null &
 
+# Start dashboard webapp as shitflix user in background
+su-exec shitflix sh -c 'cd /dashboard && node api-backend.js 2>&1' &
+
 # Use su-exec to drop privileges and execute the main process as the 'shitflix' user
 exec su-exec shitflix transmission-daemon \
     --foreground \

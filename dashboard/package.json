@@ -1,0 +1,6 @@
+{
+  "name": "shitflix-dashboard",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

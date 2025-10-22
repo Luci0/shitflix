@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shitflix dashboard</title>
+    <script src="https://unpkg.com/htmx.org"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+        }
+        #search-results-container {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            color: #333;
+        }
+        #download-result-container {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            color: #059309;
+        }
+    </style>
+</head>
+<body>
+<h1>Filelist downloader</h1>
+
+<form>
+    <label>
+        Movie name
+        <input type="text" id="movie" name="movie"/>
+    </label>
+    <br/>
+    <label>
+        Extra search params
+        <input type="text" id="extra" name="extra" value="1080"/>
+    </label>
+    <br/>
+    <button
+            hx-get="/get-search-results"
+            hx-trigger="click"
+            hx-vals="{}"
+            hx-swap="innerHTML"
+            hx-target="#search-results-container"
+            onclick="setVals()">
+        Search
+    </button>
+</form>
+
+<pre id="download-result-container"></pre>
+<pre id="search-results-container">
+    <!-- The results will be displayed here -->
+</pre>
+
+<script>
+    function setVals() {
+        const movie = document.getElementById('movie').value;
+        const extra = document.getElementById('extra').value;
+
+        const button = document.querySelector('button[hx-vals]');
+        button.setAttribute('hx-vals', JSON.stringify({
+            movie: movie,
+            extra: extra
+        }));
+    }
+</script>
+
+</body>
+</html>
