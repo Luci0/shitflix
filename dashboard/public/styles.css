@@ -415,12 +415,12 @@ input[type="text"]::placeholder {
 }
 
 .transmission-btn {
-    background: linear-gradient(135deg, #da2e2e 0%, #b91c1c 100%);
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
 }
 
 .transmission-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(218, 46, 46, 0.4);
+    box-shadow: 0 8px 16px rgba(76, 175, 80, 0.4);
 }
 
 .wishlist-btn {
@@ -830,12 +830,12 @@ input[type="text"]::placeholder {
 
 /* Banlist button styling */
 .banlist-btn {
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    background: linear-gradient(135deg, #d4a5a5 0%, #c39090 100%);
 }
 
 .banlist-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(231, 76, 60, 0.4);
+    box-shadow: 0 8px 16px rgba(212, 165, 165, 0.3);
 }
 
 /* Banlist modal styling - same as wishlist but with red accents */
