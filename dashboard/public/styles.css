@@ -828,4 +828,150 @@ input[type="text"]::placeholder {
     color: #ff6b6b;
 }
 
+/* Banlist button styling */
+.banlist-btn {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.banlist-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(231, 76, 60, 0.4);
+}
+
+/* Banlist modal styling - same as wishlist but with red accents */
+.banlist-modal-content {
+    background-color: #242424;
+    border-radius: 12px;
+    border: 1px solid #333;
+    width: 90%;
+    max-width: 900px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.banlist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #333;
+}
+
+.banlist-header h2 {
+    color: #e0e0e0;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.close-banlist-btn {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+    line-height: 1;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.close-banlist-btn:hover {
+    color: #fff;
+}
+
+.banlist-body {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.banlist-add-section {
+    padding: 1rem 1.5rem;
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
+}
+
+.banlist-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.banlist-table th {
+    background: #2a2a2a;
+    color: #b0b0b0;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #333;
+}
+
+.banlist-table td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid #2a2a2a;
+    color: #d0d0d0;
+}
+
+.banlist-table tr:hover {
+    background: #2a2a2a;
+}
+
+.banlist-type {
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.banlist-name {
+    color: #e0e0e0;
+    font-weight: 600;
+}
+
+.banlist-quality {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.banlist-date {
+    color: #999;
+    font-size: 0.95rem;
+}
+
+.banlist-empty, .banlist-error {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.banlist-error {
+    color: #e74c3c;
+}
+
+.banlist-action {
+    text-align: center;
+}
+
+.delete-banlist-btn {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.delete-banlist-btn:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+}
+
+.banlist-table th:last-child {
+    text-align: center;
+    width: 100px;
+}
 

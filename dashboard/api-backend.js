@@ -284,5 +284,107 @@ app.get('/run-sync-stream', (req, res) => {
     }
 });
 
+app.get('/get-banlist', async (req, res) => {
+    try {
+        const banlistPath = '/shitflix/scripts/txts/banlist.txt';
+        const content = await fs.readFile(banlistPath, 'utf8');
+
+        // Parse the banlist file
+        const lines = content.trim().split('\n');
+        const banlistItems = lines.map(line => {
+            const parts = line.trim().split(/\s+/);
+            if (parts.length >= 4) {
+                return {
+                    type: parts[0],
+                    name: parts[1],
+                    quality: parts[2],
+                    dateAdded: parts[3]
+                };
+            }
+            return null;
+        }).filter(item => item !== null);
+
+        res.json(banlistItems);
+    } catch (error) {
+        console.error('Error reading banlist:', error);
+        res.status(500).json([]);
+    }
+});
+
+app.post('/delete-banlist-item', async (req, res) => {
+    try {
+        const { index } = req.body;
+        const banlistPath = '/shitflix/scripts/txts/banlist.txt';
+
+        // Read the current banlist
+        const content = await fs.readFile(banlistPath, 'utf8');
+        const lines = content.trim().split('\n');
+
+        // Validate index
+        if (index < 0 || index >= lines.length) {
+            return res.status(400).json({ success: false, message: 'Invalid index' });
+        }
+
+        // Remove the line at the specified index
+        lines.splice(index, 1);
+
+        // Write back to file
+        await fs.writeFile(banlistPath, lines.join('\n') + '\n', 'utf8');
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting banlist item:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete item' });
+    }
+});
+
+app.post('/add-banlist-item', async (req, res) => {
+    try {
+        const { type, name, quality } = req.body;
+        const banlistPath = '/shitflix/scripts/txts/banlist.txt';
+
+        // Validate input
+        if (!type || !name || !quality) {
+            return res.status(400).json({ success: false, message: 'Missing required fields' });
+        }
+
+        // Read current banlist to check for duplicates
+        const content = await fs.readFile(banlistPath, 'utf8');
+        const lines = content.trim().split('\n').filter(line => line.trim());
+
+        // Check if item already exists (same type and name)
+        const isDuplicate = lines.some(line => {
+            const parts = line.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                return parts[0] === type && parts[1] === name;
+            }
+            return false;
+        });
+
+        if (isDuplicate) {
+            return res.status(400).json({
+                success: false,
+                message: 'Item already exists in banlist'
+            });
+        }
+
+        // Get current date in YYYY-MM-DD format
+        const today = new Date().toISOString().split('T')[0];
+
+        // Create the new line
+        const newLine = `${type}  ${name}  ${quality}  ${today}\n`;
+
+        // Append to file
+        await fs.appendFile(banlistPath, newLine, 'utf8');
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error adding banlist item:', error);
+        res.status(500).json({ success: false, message: 'Failed to add item' });
+    }
+});
+
+
+
 app.listen(port);
 console.log(`Dashboard started at http://${process.env.HOSTNAME || 'localhost'}:${port}`);

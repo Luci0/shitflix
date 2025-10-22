@@ -28,6 +28,9 @@
         <button id="wishlist-btn" class="service-btn wishlist-btn">
             📝 Wishlist
         </button>
+        <button id="banlist-btn" class="service-btn banlist-btn">
+            🚫 Banlist
+        </button>
         <button id="sync-btn" class="service-btn sync-btn">
             🔄 Sync
         </button>
@@ -106,6 +109,28 @@
         </div>
     </div>
 </div>
+<div id="banlist-modal" class="modal">
+    <div class="banlist-modal-content">
+        <div class="banlist-header">
+            <h2>🚫 Media Banlist</h2>
+            <button class="close-banlist-btn">&times;</button>
+        </div>
+        <div class="banlist-add-section">
+            <div class="add-form-row">
+                <select id="ban-type" class="add-input">
+                    <option value="m">🎬 Movie</option>
+                    <option value="s">📺 Series</option>
+                </select>
+                <input type="text" id="ban-name" class="add-input" placeholder="Movie.Name.Here">
+                <input type="text" id="ban-quality" class="add-input add-quality" placeholder="1080" value="1080">
+                <button id="add-banlist-btn" class="add-btn">➕ Add</button>
+            </div>
+        </div>
+        <div class="banlist-body">
+            <div id="banlist-content"></div>
+        </div>
+    </div>
+</div>
 <div id="sync-modal" class="modal">
     <div class="sync-modal-content">
         <div class="sync-header">
@@ -117,7 +142,8 @@
                 <p>Sync action updates your wishlist with the latest trending media from TMDB.</p>
                 <p>Then it processes the wishlist, and tries to download all of it.</p>
                 <p>Basically it runs the automatic nightly sync, on demand.</p>
-                <p class="sync-warning">⚠️ <strong>Warning:</strong> Do not abuse this... If you run this too often you will get rate limited by Filelist & TMDB APIs.</p>
+                <p class="sync-warning">⚠️ <strong>Warning:</strong> Do not abuse this... If you run this too often you
+                    will get rate limited by Filelist & TMDB APIs.</p>
             </div>
             <button id="run-sync-btn" class="run-sync-btn">
                 ▶️ Run Sync
@@ -301,7 +327,7 @@
         }
     });
 
-    window.addEventListener('beforeunload', function() {
+    window.addEventListener('beforeunload', function () {
         if (activeEventSource) {
             activeEventSource.close();
             activeEventSource = null;
@@ -622,7 +648,7 @@
 
                 // Store final logs and status
                 syncLogsHistory = allLogs.join('\n') || 'No output';
-                syncStatus = { success: success, exitCode: data.exitCode };
+                syncStatus = {success: success, exitCode: data.exitCode};
 
                 const statusClass = success ? 'sync-success' : 'sync-error';
                 const statusIcon = success ? '✅' : '❌';
@@ -653,7 +679,7 @@
 
             // Store whatever logs we have
             syncLogsHistory = allLogs.join('\n');
-            syncStatus = { success: false };
+            syncStatus = {success: false};
 
             // Only update display if modal is visible
             if (document.getElementById('sync-modal').classList.contains('show')) {
@@ -680,6 +706,179 @@
             button.innerHTML = '▶️ Run Sync';
         };
     });
+
+    // Add this JavaScript code after the wishlist handlers
+
+    // Banlist modal handling
+    document.getElementById('banlist-btn').addEventListener('click', function () {
+        loadBanlist();
+    });
+
+    function loadBanlist() {
+        fetch('/get-banlist')
+            .then(response => response.json())
+            .then(data => {
+                const banlistContent = document.getElementById('banlist-content');
+
+                if (data.length === 0) {
+                    banlistContent.innerHTML = '<div class="banlist-empty">No items in banlist</div>';
+                } else {
+                    let tableHtml = `
+                    <table class="banlist-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Name</th>
+                                <th>Quality</th>
+                                <th>Date Added</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                    data.forEach((item, index) => {
+                        tableHtml += `
+                        <tr>
+                            <td class="banlist-type">${item.type === 'm' ? '🎬 Movie' : '📺 Series'}</td>
+                            <td class="banlist-name">${item.name}</td>
+                            <td class="banlist-quality">${item.quality}p</td>
+                            <td class="banlist-date">${item.dateAdded}</td>
+                            <td class="banlist-action">
+                                <button class="delete-banlist-btn" data-index="${index}" data-name="${item.name}">
+                                    🗑️
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    });
+
+                    tableHtml += `
+                        </tbody>
+                    </table>
+                `;
+
+                    banlistContent.innerHTML = tableHtml;
+
+                    // Add event listeners to delete buttons
+                    document.querySelectorAll('.delete-banlist-btn').forEach(btn => {
+                        btn.addEventListener('click', function () {
+                            const index = this.dataset.index;
+                            const name = this.dataset.name;
+
+                            if (confirm(`Remove "${name.replace(/\./g, ' ')}" from banlist?`)) {
+                                deleteBanlistItem(index);
+                            }
+                        });
+                    });
+                }
+
+                document.getElementById('banlist-modal').classList.add('show');
+            })
+            .catch(error => {
+                document.getElementById('banlist-content').innerHTML = '<div class="banlist-error">Error loading banlist</div>';
+                document.getElementById('banlist-modal').classList.add('show');
+            });
+    }
+
+    function deleteBanlistItem(index) {
+        fetch('/delete-banlist-item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({index: parseInt(index)})
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Reload the banlist
+                    loadBanlist();
+                } else {
+                    alert('Error deleting item from banlist');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting item from banlist');
+            });
+    }
+
+    function addBanlistItem() {
+        const type = document.getElementById('ban-type').value;
+        const name = document.getElementById('ban-name').value.replace(/\s+/g, '.');
+        const quality = document.getElementById('ban-quality').value;
+
+        if (!name.trim()) {
+            alert('Please enter a movie/series name');
+            return;
+        }
+
+        const newItem = {
+            type: type,
+            name: name,
+            quality: quality
+        };
+
+        fetch('/add-banlist-item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newItem)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Clear the input fields
+                    document.getElementById('ban-name').value = '';
+                    document.getElementById('ban-quality').value = '1080';
+
+                    // Reload the banlist
+                    loadBanlist();
+                } else {
+                    alert(data.message || 'Error adding item to banlist');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error adding item to banlist');
+            });
+    }
+
+    // Set up event listeners
+    document.querySelector('.close-banlist-btn').addEventListener('click', function () {
+        document.getElementById('banlist-modal').classList.remove('show');
+    });
+
+    document.getElementById('banlist-modal').addEventListener('click', function (e) {
+        if (e.target === this) {
+            this.classList.remove('show');
+        }
+    });
+
+    document.getElementById('add-banlist-btn').addEventListener('click', addBanlistItem);
+
+    // Auto-replace spaces with dots in the ban name field
+    document.getElementById('ban-name').addEventListener('input', function (e) {
+        const cursorPosition = e.target.selectionStart;
+        const originalValue = e.target.value;
+        const newValue = originalValue.replace(/\s+/g, '.');
+
+        if (originalValue !== newValue) {
+            e.target.value = newValue;
+            const newCursorPosition = cursorPosition - (originalValue.length - newValue.length);
+            e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+        }
+    });
+
+    // Add enter key support for the ban name input
+    document.getElementById('ban-name').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            addBanlistItem();
+        }
+    });
+
 
 </script>
 </body>
