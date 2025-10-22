@@ -55,13 +55,23 @@
     </div>
 </div>
 
-<div id="download-modal" class="modal">
+<div id="preloader-modal" class="modal">
     <div class="modal-content">
         <div class="modal-icon"></div>
-<!--        <div class="loader"></div>-->
-<!--        <p>Downloading...</p>-->
     </div>
 </div>
+
+<div id="download-modal" class="modal">
+    <div class="modal-content-dld">
+        <div class="modal-form">
+            <label for="download-location">Download Location:</label>
+            <input type="text" id="download-location" value="/downloads/movies"/>
+            <button id="confirm-download" class="confirm-btn">Start Download</button>
+            <button id="cancel-download" class="cancel-btn">Cancel</button>
+        </div>
+    </div>
+</div>
+
 
 <script>
     // Auto-replace spaces with dots as user types
@@ -105,44 +115,72 @@
         document.getElementById('download-result-container').innerHTML = '';
     }
 
-    // Listen for htmx after-swap event to scroll to results
+    let modalShowTime = 0;
+    let pendingDownload = null;
+
+    // Use event delegation to catch dynamically added buttons
+    document.body.addEventListener('click', function (evt) {
+        if (evt.target.classList.contains('download-btn')) {
+            evt.preventDefault();
+            evt.stopPropagation();
+
+            // Store the download info from data attributes
+            pendingDownload = {
+                name: decodeURIComponent(evt.target.dataset.name),
+                link: decodeURIComponent(evt.target.dataset.link)
+            };
+
+            // Show modal
+            document.getElementById('download-modal').classList.add('show');
+        }
+    });
+
+    // Handle confirm download
+    document.getElementById('confirm-download').addEventListener('click', function () {
+        if (pendingDownload) {
+            const downloadLocation = document.getElementById('download-location').value;
+            const downloadUrl = `/download-torrent?name=${encodeURIComponent(pendingDownload.name)}&link=${encodeURIComponent(pendingDownload.link)}&saveDir=${encodeURIComponent(downloadLocation)}`;
+
+            // Hide form, show loading
+            document.getElementById('download-modal').classList.remove('show');
+            document.getElementById('preloader-modal').classList.add('show');
+
+            // Record time when download starts
+            modalShowTime = Date.now();
+
+            // Make the request using htmx
+            htmx.ajax('GET', downloadUrl, {
+                target: '#download-result-container',
+                swap: 'innerHTML'
+            });
+        }
+    });
+
+    // Handle cancel
+    document.getElementById('cancel-download').addEventListener('click', function () {
+        document.getElementById('download-modal').classList.remove('show');
+        pendingDownload = null;
+    });
+
+    // Listen for htmx after-swap events
     document.body.addEventListener('htmx:afterSwap', function (evt) {
+        // Scroll to search results
         if (evt.detail.target.id === 'search-results-container') {
-            // Smooth scroll to results
             const resultsContainer = document.getElementById('search-results-container');
             if (resultsContainer && resultsContainer.innerHTML.trim() !== '') {
                 resultsContainer.scrollIntoView({behavior: 'smooth', block: 'nearest'});
             }
         }
-    });
-    // Show modal on download button click
-    let modalShowTime = 0;
 
-    // Use event delegation to catch dynamically added buttons
-    document.body.addEventListener('click', function (evt) {
-        // Check if clicked element is a download button
-        if (evt.target.classList.contains('download-btn')) {
-            document.getElementById('download-modal').classList.add('show');
-            modalShowTime = Date.now();
-        }
-    });
-
-    // Also keep the htmx event listener as backup
-    document.body.addEventListener('htmx:beforeRequest', function (evt) {
-        if (evt.detail.path && evt.detail.path.includes('/download-torrent')) {
-            document.getElementById('download-modal').classList.add('show');
-            modalShowTime = Date.now();
-        }
-    });
-
-    // Hide modal when download response is received (with minimum 2 second display)
-    document.body.addEventListener('htmx:afterSwap', function (evt) {
-        if (evt.detail.target.id === 'download-result-container') {
+        // Hide modal after download completes
+        if (evt.detail.target.id === 'download-result-container' && modalShowTime > 0) {
             const elapsedTime = Date.now() - modalShowTime;
             const remainingTime = Math.max(0, 1500 - elapsedTime);
 
             setTimeout(function () {
-                document.getElementById('download-modal').classList.remove('show');
+                document.getElementById('preloader-modal').classList.remove('show');
+                pendingDownload = null;
+                modalShowTime = 0;
             }, remainingTime);
         }
     });

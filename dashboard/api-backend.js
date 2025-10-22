@@ -16,18 +16,18 @@ app.get('/', function (req, res) {
 app.get('/download-torrent', (req, res) => {
     let downloadLink = req.query.link;
     let movieName = req.query.name;
-    console.log(downloadLink);
+    let saveDir = req.query.saveDir || '/downloads/movies'; // Use provided dir or default
 
-    let saveDir = '/downloads/movies'
+    console.log('Download link:', downloadLink);
+    console.log('Save directory:', saveDir);
 
-    let downloadScript = spawnSync('transmission-remote',
-        ['-w', saveDir, '-a', downloadLink], {encoding: 'utf8'})
+    let downloadScript = spawnSync('transmission-remote', ['-w', saveDir, '-a', downloadLink], {encoding: 'utf8'})
     console.log(downloadScript.stdout)
     console.log(downloadScript.stderr)
     if (downloadScript.stderr) {
         res.send('❌ Error downloading ' + movieName)
     } else {
-        res.send('✅ Download of ' + movieName + ' started successfully!');
+        res.send('✅ Download of ' + movieName + ' started successfully to ' + saveDir);
     }
 })
 
@@ -75,27 +75,23 @@ app.get('/get-search-results', (req, res) => {
         `;
 
         results.forEach(item => {
-            const moviesHxGetDldLink = `/download-torrent?name=${encodeURIComponent(item.name)}&link=${encodeURIComponent(item.download_link)}`;
             const imdbLink = item.imdb ? `<a href="https://www.imdb.com/title/${item.imdb}" target="_blank" class="imdb-link">IMDb</a>` : '-';
 
             tableHtml += `
-                <tr>
-                    <td class="movie-name">${item.name}</td>
-                    <td class="size">${item.sizeInGb ? item.sizeInGb.toFixed(2) + ' GB' : '-'}</td>
-                    <td class="seeders">${item.seeders || 0}</td>
-                    <td><span class="category">${item.category || '-'}</span></td>
-                    <td>${imdbLink}</td>
-                    <td>
-                        <button class="download-btn"
-                                hx-get="${moviesHxGetDldLink}"
-                                hx-trigger="click"
-                                hx-swap="innerHTML"
-                                hx-target="#download-result-container">
-                            Download
-                        </button>
-                    </td>
-                </tr>
-            `;
+        <tr>
+            <td class="movie-name">${item.name}</td>
+            <td class="size">${item.sizeInGb ? item.sizeInGb.toFixed(2) + ' GB' : '-'}</td>
+            <td class="seeders">${item.seeders || 0}</td>
+            <td><span class="category">${item.category || '-'}</span></td>
+            <td>${imdbLink}</td>
+            <td>
+                <button class="download-btn"
+                        data-name="${encodeURIComponent(item.name)}"
+                        data-link="${encodeURIComponent(item.download_link)}">
+                    Download
+                </button>
+            </td>
+        </tr>`;
         });
 
         tableHtml += `
