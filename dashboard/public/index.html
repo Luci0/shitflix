@@ -207,7 +207,10 @@
 
     // Wishlist modal handling
     document.getElementById('wishlist-btn').addEventListener('click', function() {
-        // Fetch wishlist content
+        loadWishlist();
+    });
+
+    function loadWishlist() {
         fetch('/get-wishlist')
             .then(response => response.json())
             .then(data => {
@@ -224,18 +227,24 @@
                                 <th>Name</th>
                                 <th>Quality</th>
                                 <th>Date Added</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                 `;
 
-                    data.forEach(item => {
+                    data.forEach((item, index) => {
                         tableHtml += `
                         <tr>
                             <td class="wishlist-type">${item.type === 'm' ? '🎬 Movie' : '📺 Series'}</td>
-                            <td class="wishlist-name">${item.name}</td>
-                            <td class="wishlist-quality">${item.quality}</td>
+                            <td class="wishlist-name">${item.name.replace(/\./g, ' ')}</td>
+                            <td class="wishlist-quality">${item.quality}p</td>
                             <td class="wishlist-date">${item.dateAdded}</td>
+                            <td class="wishlist-action">
+                                <button class="delete-wishlist-btn" data-index="${index}" data-name="${item.name}">
+                                    🗑️
+                                </button>
+                            </td>
                         </tr>
                     `;
                     });
@@ -246,6 +255,18 @@
                 `;
 
                     wishlistContent.innerHTML = tableHtml;
+
+                    // Add event listeners to delete buttons
+                    document.querySelectorAll('.delete-wishlist-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const index = this.dataset.index;
+                            const name = this.dataset.name;
+
+                            if (confirm(`Delete "${name.replace(/\./g, ' ')}" from wishlist?`)) {
+                                deleteWishlistItem(index);
+                            }
+                        });
+                    });
                 }
 
                 document.getElementById('wishlist-modal').classList.add('show');
@@ -254,6 +275,41 @@
                 document.getElementById('wishlist-content').innerHTML = '<div class="wishlist-error">Error loading wishlist</div>';
                 document.getElementById('wishlist-modal').classList.add('show');
             });
+    }
+
+    function deleteWishlistItem(index) {
+        fetch('/delete-wishlist-item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ index: parseInt(index) })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Reload the wishlist
+                    loadWishlist();
+                } else {
+                    alert('Error deleting item from wishlist');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting item from wishlist');
+            });
+    }
+
+    // Close wishlist modal
+    document.querySelector('.close-wishlist-btn').addEventListener('click', function() {
+        document.getElementById('wishlist-modal').classList.remove('show');
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('wishlist-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.classList.remove('show');
+        }
     });
 
 

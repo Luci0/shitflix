@@ -7,6 +7,7 @@ const port = process.env.DASHBOARD_PORT || 3333;
 
 const dldScriptPath = '/shitflix/scripts/dld.sh';
 
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function (req, res) {
@@ -132,6 +133,33 @@ app.get('/get-wishlist', async (req, res) => {
     } catch (error) {
         console.error('Error reading wishlist:', error);
         res.status(500).json([]);
+    }
+});
+
+app.post('/delete-wishlist-item', async (req, res) => {
+    try {
+        const { index } = req.body;
+        const wishlistPath = '/shitflix/scripts/txts/wishlist.txt';
+
+        // Read the current wishlist
+        const content = await fs.readFile(wishlistPath, 'utf8');
+        const lines = content.trim().split('\n');
+
+        // Validate index
+        if (index < 0 || index >= lines.length) {
+            return res.status(400).json({ success: false, message: 'Invalid index' });
+        }
+
+        // Remove the line at the specified index
+        lines.splice(index, 1);
+
+        // Write back to file
+        await fs.writeFile(wishlistPath, lines.join('\n') + '\n', 'utf8');
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting wishlist item:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete item' });
     }
 });
 

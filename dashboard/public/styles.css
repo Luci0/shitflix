@@ -537,3 +537,30 @@ input[type="text"]::placeholder {
 .wishlist-error {
     color: #e74c3c;
 }
+.wishlist-action {
+    text-align: center;
+}
+
+.delete-wishlist-btn {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.delete-wishlist-btn:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+}
+
+.wishlist-table th:last-child {
+    text-align: center;
+    width: 100px;
+}
+

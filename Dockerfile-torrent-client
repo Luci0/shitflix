@@ -17,11 +17,15 @@ RUN addgroup -g 1000 shitflix && \
     chown -R shitflix:shitflix /downloads /config /incomplete /shitflix /dashboard && \
     chmod -R 775 /downloads /config /incomplete /shitflix /dashboard
 
-# Copy dashboard from builder stage with node_modules
 COPY --from=dashboard-builder --chown=shitflix:shitflix /build /dashboard
 
 COPY ./scripts /shitflix/scripts
-RUN chmod +x /shitflix/scripts/entrypoint.sh
+RUN chmod +x /shitflix/scripts/entrypoint.sh && \
+    mkdir -p /shitflix/scripts/txts && \
+    touch /shitflix/scripts/txts/wishlist.txt && \
+    chown -R shitflix:shitflix /shitflix/scripts && \
+    chmod -R 755 /shitflix/scripts && \
+    chmod 664 /shitflix/scripts/txts/wishlist.txt
 
 # Set a default cron schedule
 ENV RUNNER_CRON_SCHEDULE="0 3 * * *"
