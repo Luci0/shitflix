@@ -1,6 +1,6 @@
 #!/bin/sh
 # Stop and remove the existing container
-docker-compose down torrent-client
+docker compose down torrent-client
 
 # Remove the existing image
 docker images -q --filter "reference=shitflix-torrent-client*" | xargs -r docker rmi
@@ -13,4 +13,4 @@ docker volume rm shitflix_jellyfin-config
 docker volume rm shitflix_jellyfin-cache
 
 # Rebuild and start the service
-docker-compose up --build --force-recreate torrent-client
+docker compose up --build --force-recreate torrent-client

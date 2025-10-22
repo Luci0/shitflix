@@ -3,7 +3,7 @@ FROM alpine:3.20
 RUN addgroup -g 1000 shitflix && \
     adduser -u 1000 -G shitflix -D shitflix && \
     apk add --no-cache tzdata transmission-cli=4.0.5-r2 transmission-daemon=4.0.5-r2 \
-      transmission-remote=4.0.5-r2 curl jq cronie su-exec && \
+      transmission-remote=4.0.5-r2 curl jq cronie su-exec coreutils && \
     mkdir -p /downloads /config /incomplete /shitflix && \
     chown -R shitflix:shitflix /downloads /config /incomplete /shitflix && \
     chmod -R 775 /downloads /config /incomplete /shitflix
