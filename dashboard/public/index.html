@@ -246,6 +246,33 @@
 </div>
 
 <script>
+    // Auto-replace spaces with dots as user types
+    document.getElementById('movie').addEventListener('input', function(e) {
+        const cursorPosition = e.target.selectionStart;
+        const originalValue = e.target.value;
+        const newValue = originalValue.replace(/\s+/g, '.');
+
+        if (originalValue !== newValue) {
+            e.target.value = newValue;
+            // Maintain cursor position after replacement
+            const newCursorPosition = cursorPosition - (originalValue.length - newValue.length);
+            e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+        }
+    });
+
+    document.getElementById('extra').addEventListener('input', function(e) {
+        const cursorPosition = e.target.selectionStart;
+        const originalValue = e.target.value;
+        const newValue = originalValue.replace(/\s+/g, '.');
+
+        if (originalValue !== newValue) {
+            e.target.value = newValue;
+            // Maintain cursor position after replacement
+            const newCursorPosition = cursorPosition - (originalValue.length - newValue.length);
+            e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+        }
+    });
+
     function setVals() {
         const movie = document.getElementById('movie').value;
         const extra = document.getElementById('extra').value;

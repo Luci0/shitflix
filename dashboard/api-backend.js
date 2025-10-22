@@ -29,17 +29,18 @@ app.get('/download-torrent', (req, res) => {
 })
 
 app.get('/get-search-results', (req, res) => {
-    const movie = req.query.movie ?? ''
-    const extra = req.query.extra ?? ''
+    // Replace spaces with dots for torrent search compatibility
+    const movie = (req.query.movie ?? '').replace(/\s+/g, '.')
+    const extra = (req.query.extra ?? '').replace(/\s+/g, '.')
 
-    console.log(movie);
-    console.log(extra);
+    console.log('Searching for movie:', movie, 'with extra:', extra)
 
-    let dldScript = spawnSync(dldScriptPath + ' -q ' + movie + ' -Q ' + extra, {
-        encoding: 'utf8',
-        shell: true
+    // Use array form to properly handle special characters
+    let dldScript = spawnSync(dldScriptPath, ['-q', movie, '-Q', extra], {
+        encoding: 'utf8'
     })
-    console.log(dldScriptPath + ' -q ' + movie + ' -Q ' + extra)
+
+    console.log('Command:', dldScriptPath, '-q', movie, '-Q', extra)
     let responseText = dldScript.stdout
 
     console.log('Response =======>' + responseText)
