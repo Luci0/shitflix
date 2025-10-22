@@ -28,6 +28,10 @@
         <button id="wishlist-btn" class="service-btn wishlist-btn">
             📝 Wishlist
         </button>
+        <button id="sync-btn" class="service-btn sync-btn">
+            🔄 Sync
+        </button>
+
     </div>
 
     <div class="search-form">
@@ -102,11 +106,27 @@
         </div>
     </div>
 </div>
+<div id="sync-modal" class="modal">
+    <div class="sync-modal-content">
+        <div class="sync-header">
+            <h2>🔄 Sync</h2>
+            <button class="close-sync-btn">&times;</button>
+        </div>
+        <div class="sync-body">
+            <button id="run-sync-btn" class="run-sync-btn">
+                ▶️ Run Sync
+            </button>
+            <div id="sync-logs" class="sync-logs"></div>
+        </div>
+    </div>
+</div>
+
 <script>
     function openService(port) {
         const host = window.location.hostname;
         window.open(`http://${host}:${port}`, '_blank');
     }
+
     // Auto-replace spaces with dots as user types
     document.getElementById('movie').addEventListener('input', function (e) {
         const cursorPosition = e.target.selectionStart;
@@ -145,9 +165,9 @@
             movieInput.focus();
 
             // Remove error class after user starts typing
-            movieInput.addEventListener('input', function() {
+            movieInput.addEventListener('input', function () {
                 movieInput.classList.remove('input-error');
-            }, { once: true });
+            }, {once: true});
 
             // Stop event propagation to prevent htmx from triggering
             event.stopPropagation();
@@ -173,11 +193,11 @@
     }
 
     // Add this to ensure htmx re-processes the button after updating hx-vals
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const searchBtn = document.querySelector('.search-btn');
 
         // Use htmx:configRequest to dynamically set values right before request
-        document.body.addEventListener('htmx:configRequest', function(evt) {
+        document.body.addEventListener('htmx:configRequest', function (evt) {
             if (evt.detail.elt === searchBtn) {
                 const movie = document.getElementById('movie').value.trim();
                 const extra = document.getElementById('extra').value;
@@ -190,9 +210,9 @@
                     movieInput.classList.add('input-error');
                     movieInput.focus();
 
-                    movieInput.addEventListener('input', function() {
+                    movieInput.addEventListener('input', function () {
                         movieInput.classList.remove('input-error');
-                    }, { once: true });
+                    }, {once: true});
 
                     return;
                 }
@@ -272,6 +292,13 @@
                 pendingDownload = null;
                 modalShowTime = 0;
             }, remainingTime);
+        }
+    });
+
+    window.addEventListener('beforeunload', function() {
+        if (activeEventSource) {
+            activeEventSource.close();
+            activeEventSource = null;
         }
     });
 
@@ -464,6 +491,189 @@
         }
     });
 
+    let syncLogsHistory = '';
+    let syncStatus = null;
+    let activeEventSource = null; // Track the active EventSource
+    let isSyncRunning = false; // Track if sync is currently running
+
+    // Sync modal handling
+    document.getElementById('sync-btn').addEventListener('click', function () {
+        document.getElementById('sync-modal').classList.add('show');
+        const logsDiv = document.getElementById('sync-logs');
+
+        // If sync is still running, just show current state
+        if (isSyncRunning && activeEventSource) {
+            // Continue showing the current logs with running status
+            logsDiv.innerHTML = `
+            <div class="sync-running">
+                ⏳ Sync in progress...
+            </div>
+            <pre class="sync-log-content">${syncLogsHistory}</pre>
+        `;
+
+            // Auto-scroll to bottom
+            const logContent = logsDiv.querySelector('.sync-log-content');
+            if (logContent) {
+                logContent.scrollTop = logContent.scrollHeight;
+            }
+        } else if (syncLogsHistory) {
+            // Show historical logs if not running
+            const statusClass = syncStatus?.success ? 'sync-success' : 'sync-error';
+            const statusIcon = syncStatus?.success ? '✅' : '❌';
+            const statusMessage = syncStatus ? `
+            <div class="${statusClass}">
+                ${statusIcon} Last sync ${syncStatus.success ? 'completed successfully' : 'failed'}${syncStatus.exitCode !== undefined ? ` (Exit code: ${syncStatus.exitCode})` : ''}
+            </div>
+        ` : '';
+
+            logsDiv.innerHTML = `
+            ${statusMessage}
+            <pre class="sync-log-content">${syncLogsHistory}</pre>
+        `;
+        }
+    });
+
+    // Close sync modal
+    document.querySelector('.close-sync-btn').addEventListener('click', function () {
+        document.getElementById('sync-modal').classList.remove('show');
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('sync-modal').addEventListener('click', function (e) {
+        if (e.target === this) {
+            this.classList.remove('show');
+        }
+    });
+
+    document.getElementById('run-sync-btn').addEventListener('click', function () {
+        const button = this;
+        const logsDiv = document.getElementById('sync-logs');
+
+        // If already running, don't start another
+        if (isSyncRunning && activeEventSource) {
+            return;
+        }
+
+        // Clear previous logs when starting new sync
+        syncLogsHistory = '';
+        syncStatus = null;
+        isSyncRunning = true;
+
+        // Close any existing EventSource
+        if (activeEventSource) {
+            activeEventSource.close();
+            activeEventSource = null;
+        }
+
+        // Disable button and show loading state
+        button.disabled = true;
+        button.innerHTML = '⏳ Running...';
+        logsDiv.innerHTML = '<div class="sync-loading">Starting sync process...</div>';
+
+        // Store logs as they come in
+        let allLogs = [];
+        let hasErrors = false;
+
+        // Create EventSource for real-time streaming
+        activeEventSource = new EventSource('/run-sync-stream');
+
+        activeEventSource.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+
+            if (data.type === 'log' || data.type === 'error') {
+                // Add log line to array
+                allLogs.push(data.content);
+
+                if (data.type === 'error') {
+                    hasErrors = true;
+                }
+
+                // Update stored history
+                syncLogsHistory = allLogs.join('\n');
+
+                // Only update display if modal is visible
+                if (document.getElementById('sync-modal').classList.contains('show')) {
+                    logsDiv.innerHTML = `
+                    <div class="sync-running">
+                        ⏳ Sync in progress...
+                    </div>
+                    <pre class="sync-log-content">${syncLogsHistory}</pre>
+                `;
+
+                    // Auto-scroll to bottom
+                    const logContent = logsDiv.querySelector('.sync-log-content');
+                    if (logContent) {
+                        logContent.scrollTop = logContent.scrollHeight;
+                    }
+                }
+            } else if (data.type === 'complete') {
+                // Process complete
+                activeEventSource.close();
+                activeEventSource = null;
+                isSyncRunning = false;
+
+                const success = data.exitCode === 0 && !hasErrors;
+
+                // Store final logs and status
+                syncLogsHistory = allLogs.join('\n') || 'No output';
+                syncStatus = { success: success, exitCode: data.exitCode };
+
+                const statusClass = success ? 'sync-success' : 'sync-error';
+                const statusIcon = success ? '✅' : '❌';
+
+                // Only update display if modal is visible
+                if (document.getElementById('sync-modal').classList.contains('show')) {
+                    logsDiv.innerHTML = `
+                    <div class="${statusClass}">
+                        ${statusIcon} Sync ${success ? 'completed successfully' : 'failed'} (Exit code: ${data.exitCode})
+                    </div>
+                    <pre class="sync-log-content">${syncLogsHistory}</pre>
+                `;
+                }
+
+                // Re-enable button
+                button.disabled = false;
+                button.innerHTML = '▶️ Run Sync';
+            }
+        };
+
+        activeEventSource.onerror = function (error) {
+            console.error('EventSource error:', error);
+            if (activeEventSource) {
+                activeEventSource.close();
+                activeEventSource = null;
+            }
+            isSyncRunning = false;
+
+            // Store whatever logs we have
+            syncLogsHistory = allLogs.join('\n');
+            syncStatus = { success: false };
+
+            // Only update display if modal is visible
+            if (document.getElementById('sync-modal').classList.contains('show')) {
+                // Show error if no logs were received
+                if (allLogs.length === 0) {
+                    logsDiv.innerHTML = `
+                    <div class="sync-error">
+                        ❌ Connection error: Unable to stream logs
+                    </div>
+                `;
+                } else {
+                    // Show what we have so far with error status
+                    logsDiv.innerHTML = `
+                    <div class="sync-error">
+                        ❌ Sync interrupted
+                    </div>
+                    <pre class="sync-log-content">${syncLogsHistory}</pre>
+                `;
+                }
+            }
+
+            // Re-enable button
+            button.disabled = false;
+            button.innerHTML = '▶️ Run Sync';
+        };
+    });
 
 </script>
 </body>

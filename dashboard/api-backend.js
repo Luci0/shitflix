@@ -212,7 +212,77 @@ app.post('/add-wishlist-item', async (req, res) => {
     }
 });
 
+// Replace the existing /run-sync endpoint with this SSE version
+app.get('/run-sync-stream', (req, res) => {
+    // Set up SSE headers
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'Access-Control-Allow-Origin': '*'
+    });
 
+    let process = null;
+
+    try {
+        const scriptPath = '/shitflix/scripts/shitflix-runner.sh';
+        const { spawn } = require('child_process');
+
+        // Use spawn instead of spawnSync for real-time output
+        const process = spawn(scriptPath, [], {
+            encoding: 'utf8',
+            detached: false
+        });
+
+        // Send stdout data as it arrives
+        process.stdout.on('data', (data) => {
+            const lines = data.toString().split('\n').filter(line => line);
+            lines.forEach(line => {
+                res.write(`data: ${JSON.stringify({ type: 'log', content: line })}\n\n`);
+            });
+        });
+
+        // Send stderr data as it arrives
+        process.stderr.on('data', (data) => {
+            const lines = data.toString().split('\n').filter(line => line);
+            lines.forEach(line => {
+                res.write(`data: ${JSON.stringify({ type: 'error', content: line })}\n\n`);
+            });
+        });
+
+        // Handle process completion
+        process.on('close', (code) => {
+            res.write(`data: ${JSON.stringify({ type: 'complete', exitCode: code })}\n\n`);
+            res.end();
+        });
+
+        // Handle process errors
+        process.on('error', (error) => {
+            res.write(`data: ${JSON.stringify({ type: 'error', content: `Process error: ${error.message}` })}\n\n`);
+            res.end();
+        });
+
+        const cleanup = () => {
+            if (process && !process.killed) {
+                process.kill('SIGTERM');
+                setTimeout(() => {
+                    if (!process.killed) {
+                        process.kill('SIGKILL');
+                    }
+                }, 1000);
+            }
+        };
+
+        req.on('close', cleanup);
+        req.on('error', cleanup);
+        res.on('close', cleanup);
+        res.on('error', cleanup);
+
+    } catch (error) {
+        res.write(`data: ${JSON.stringify({ type: 'error', content: `Error: ${error.message}` })}\n\n`);
+        res.end();
+    }
+});
 
 app.listen(port);
 console.log(`Dashboard started at http://${process.env.HOSTNAME || 'localhost'}:${port}`);
