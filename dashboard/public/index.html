@@ -58,8 +58,8 @@
 <div id="download-modal" class="modal">
     <div class="modal-content">
         <div class="modal-icon"></div>
-        <div class="loader"></div>
-        <p>Downloading...</p>
+<!--        <div class="loader"></div>-->
+<!--        <p>Downloading...</p>-->
     </div>
 </div>
 
@@ -139,7 +139,7 @@
     document.body.addEventListener('htmx:afterSwap', function (evt) {
         if (evt.detail.target.id === 'download-result-container') {
             const elapsedTime = Date.now() - modalShowTime;
-            const remainingTime = Math.max(0, 200000 - elapsedTime);
+            const remainingTime = Math.max(0, 1500 - elapsedTime);
 
             setTimeout(function () {
                 document.getElementById('download-modal').classList.remove('show');

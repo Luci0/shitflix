@@ -267,14 +267,14 @@ input[type="text"]::placeholder {
     min-height: 300px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
 .modal-icon {
     width: 200px;
     height: 200px;
-    background-image: url('/icons/favicon.png');
+    background-image: url('/icons/dld-started.gif');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -282,8 +282,9 @@ input[type="text"]::placeholder {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    opacity: 0.15;
+    opacity: 1;
     pointer-events: none;
+    z-index: 1;
 }
 
 .loader {
@@ -293,7 +294,7 @@ input[type="text"]::placeholder {
     width: 60px;
     height: 60px;
     animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
+    margin-top: auto;
     position: relative;
     z-index: 2;
 }
@@ -303,6 +304,7 @@ input[type="text"]::placeholder {
     font-weight: 600;
     font-size: 1.2rem;
     margin-top: 20px;
+    margin-bottom: 0;
     position: relative;
     z-index: 2;
 }
