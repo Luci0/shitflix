@@ -18,6 +18,17 @@
         Downloader
     </h1>
 
+    <div class="service-buttons">
+        <button onclick="window.open('http://localhost:8096', '_blank')" class="service-btn jellyfin-btn">
+            🎬 Jellyfin
+        </button>
+        <button onclick="window.open('http://localhost:9091', '_blank')" class="service-btn transmission-btn">
+            ⚙️ Transmission
+        </button>
+        <button id="wishlist-btn" class="service-btn wishlist-btn">
+            📝 Wishlist
+        </button>
+    </div>
 
     <div class="search-form">
         <form onsubmit="return false;">
@@ -71,8 +82,17 @@
         </div>
     </div>
 </div>
-
-
+<div id="wishlist-modal" class="modal">
+    <div class="wishlist-modal-content">
+        <div class="wishlist-header">
+            <h2>📝 Movie Wishlist</h2>
+            <button class="close-wishlist-btn">&times;</button>
+        </div>
+        <div class="wishlist-body">
+            <textarea id="wishlist-content" readonly></textarea>
+        </div>
+    </div>
+</div>
 <script>
     // Auto-replace spaces with dots as user types
     document.getElementById('movie').addEventListener('input', function (e) {
@@ -184,6 +204,34 @@
             }, remainingTime);
         }
     });
+
+    // Wishlist modal handling
+    document.getElementById('wishlist-btn').addEventListener('click', function() {
+        // Fetch wishlist content
+        fetch('/get-wishlist')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('wishlist-content').value = data;
+                document.getElementById('wishlist-modal').classList.add('show');
+            })
+            .catch(error => {
+                document.getElementById('wishlist-content').value = 'Error loading wishlist';
+                document.getElementById('wishlist-modal').classList.add('show');
+            });
+    });
+
+    // Close wishlist modal
+    document.querySelector('.close-wishlist-btn').addEventListener('click', function() {
+        document.getElementById('wishlist-modal').classList.remove('show');
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('wishlist-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.classList.remove('show');
+        }
+    });
+
 </script>
 </body>
 </html>

@@ -106,5 +106,19 @@ app.get('/get-search-results', (req, res) => {
     }
 });
 
+const fs = require('fs').promises;
+
+app.get('/get-wishlist', async (req, res) => {
+    try {
+        const wishlistPath = '/shitflix/scripts/txts/wishlist.txt';
+        const content = await fs.readFile(wishlistPath, 'utf8');
+        res.type('text/plain');
+        res.send(content);
+    } catch (error) {
+        console.error('Error reading wishlist:', error);
+        res.status(500).send('Unable to load wishlist');
+    }
+});
+
 app.listen(port);
 console.log('Dashboard started at http://localhost:' + port);

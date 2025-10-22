@@ -288,6 +288,7 @@ input[type="text"]::placeholder {
 .modal-icon {
     width: 200px;
     height: 200px;
+    /*noinspection CssUnknownTarget*/
     background-image: url('/icons/dld-started.gif');
     background-size: contain;
     background-repeat: no-repeat;
@@ -386,3 +387,119 @@ input[type="text"]::placeholder {
     }
 }
 
+.service-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.service-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: white;
+}
+
+.jellyfin-btn {
+    background: linear-gradient(135deg, #aa5cc3 0%, #6b46c1 100%);
+}
+
+.jellyfin-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(170, 92, 195, 0.4);
+}
+
+.transmission-btn {
+    background: linear-gradient(135deg, #da2e2e 0%, #b91c1c 100%);
+}
+
+.transmission-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(218, 46, 46, 0.4);
+}
+
+.wishlist-btn {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+}
+
+.wishlist-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(74, 144, 226, 0.4);
+}
+
+.wishlist-modal-content {
+    background-color: #242424;
+    border-radius: 12px;
+    border: 1px solid #333;
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.wishlist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #333;
+}
+
+.wishlist-header h2 {
+    color: #e0e0e0;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.close-wishlist-btn {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+    line-height: 1;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.close-wishlist-btn:hover {
+    color: #fff;
+}
+
+.wishlist-body {
+    flex: 1;
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+#wishlist-content {
+    width: 100%;
+    height: 400px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    padding: 1rem;
+    resize: none;
+    line-height: 1.6;
+}
+
+#wishlist-content:focus {
+    outline: none;
+    border-color: #4a90e2;
+}
+
+#wishlist-content[readonly] {
+    cursor: default;
+    background: #1a1a1a;
+}
