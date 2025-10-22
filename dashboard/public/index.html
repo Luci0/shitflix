@@ -55,6 +55,14 @@
     </div>
 </div>
 
+<div id="download-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-icon"></div>
+        <div class="loader"></div>
+        <p>Downloading...</p>
+    </div>
+</div>
+
 <script>
     // Auto-replace spaces with dots as user types
     document.getElementById('movie').addEventListener('input', function (e) {
@@ -105,6 +113,37 @@
             if (resultsContainer && resultsContainer.innerHTML.trim() !== '') {
                 resultsContainer.scrollIntoView({behavior: 'smooth', block: 'nearest'});
             }
+        }
+    });
+    // Show modal on download button click
+    let modalShowTime = 0;
+
+    // Use event delegation to catch dynamically added buttons
+    document.body.addEventListener('click', function (evt) {
+        // Check if clicked element is a download button
+        if (evt.target.classList.contains('download-btn')) {
+            document.getElementById('download-modal').classList.add('show');
+            modalShowTime = Date.now();
+        }
+    });
+
+    // Also keep the htmx event listener as backup
+    document.body.addEventListener('htmx:beforeRequest', function (evt) {
+        if (evt.detail.path && evt.detail.path.includes('/download-torrent')) {
+            document.getElementById('download-modal').classList.add('show');
+            modalShowTime = Date.now();
+        }
+    });
+
+    // Hide modal when download response is received (with minimum 2 second display)
+    document.body.addEventListener('htmx:afterSwap', function (evt) {
+        if (evt.detail.target.id === 'download-result-container') {
+            const elapsedTime = Date.now() - modalShowTime;
+            const remainingTime = Math.max(0, 200000 - elapsedTime);
+
+            setTimeout(function () {
+                document.getElementById('download-modal').classList.remove('show');
+            }, remainingTime);
         }
     });
 </script>
