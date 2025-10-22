@@ -248,7 +248,7 @@
                         tableHtml += `
                         <tr>
                             <td class="wishlist-type">${item.type === 'm' ? '🎬 Movie' : '📺 Series'}</td>
-                            <td class="wishlist-name">${item.name.replace(/\./g, ' ')}</td>
+                            <td class="wishlist-name">${item.name}</td>
                             <td class="wishlist-quality">${item.quality}p</td>
                             <td class="wishlist-date">${item.dateAdded}</td>
                             <td class="wishlist-action">
@@ -357,7 +357,7 @@
                     // Reload the wishlist
                     loadWishlist();
                 } else {
-                    alert('Error adding item to wishlist');
+                    alert(data.message || 'Error adding item to wishlist');
                 }
             })
             .catch(error => {

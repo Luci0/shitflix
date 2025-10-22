@@ -173,6 +173,26 @@ app.post('/add-wishlist-item', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Missing required fields' });
         }
 
+        // Read current wishlist to check for duplicates
+        const content = await fs.readFile(wishlistPath, 'utf8');
+        const lines = content.trim().split('\n').filter(line => line.trim());
+
+        // Check if item already exists (same type and name)
+        const isDuplicate = lines.some(line => {
+            const parts = line.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                return parts[0] === type && parts[1] === name;
+            }
+            return false;
+        });
+
+        if (isDuplicate) {
+            return res.status(400).json({
+                success: false,
+                message: 'Item already exists in wishlist'
+            });
+        }
+
         // Get current date in YYYY-MM-DD format
         const today = new Date().toISOString().split('T')[0];
 
@@ -188,6 +208,7 @@ app.post('/add-wishlist-item', async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to add item' });
     }
 });
+
 
 
 app.listen(port);
