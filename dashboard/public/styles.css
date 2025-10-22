@@ -623,3 +623,20 @@ input[type="text"]::placeholder {
     box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
 }
 
+.input-error {
+    border-color: #e74c3c !important;
+    background: #2a1a1a !important;
+    animation: shake 0.3s ease-in-out;
+}
+
+.input-error:focus {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+

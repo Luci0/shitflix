@@ -45,11 +45,9 @@
             <button class="search-btn"
                     hx-get="/get-search-results"
                     hx-trigger="click"
-                    hx-vals="{}"
                     hx-swap="innerHTML"
                     hx-target="#search-results-container"
-                    hx-indicator=".loading"
-                    onclick="setVals()">
+                    hx-indicator=".loading">
                 🔍 Search
             </button>
         </form>
@@ -133,10 +131,31 @@
     });
 
     function setVals() {
-        const movie = document.getElementById('movie').value;
+        const movieInput = document.getElementById('movie');
+        const movie = movieInput.value.trim();
         const extra = document.getElementById('extra').value;
 
+        // Validate movie name is not empty
+        if (!movie) {
+            movieInput.classList.add('input-error');
+            movieInput.focus();
+
+            // Remove error class after user starts typing
+            movieInput.addEventListener('input', function() {
+                movieInput.classList.remove('input-error');
+            }, { once: true });
+
+            // Stop event propagation to prevent htmx from triggering
+            event.stopPropagation();
+            event.preventDefault();
+            return false;
+        }
+
+        movieInput.classList.remove('input-error');
+
         const button = document.querySelector('button[hx-vals]');
+
+        // Update the hx-vals attribute with current values
         button.setAttribute('hx-vals', JSON.stringify({
             movie: movie,
             extra: extra
@@ -144,7 +163,43 @@
 
         // Clear download message when starting new search
         document.getElementById('download-result-container').innerHTML = '';
+
+        // Allow htmx to proceed
+        return true;
     }
+
+    // Add this to ensure htmx re-processes the button after updating hx-vals
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchBtn = document.querySelector('.search-btn');
+
+        // Use htmx:configRequest to dynamically set values right before request
+        document.body.addEventListener('htmx:configRequest', function(evt) {
+            if (evt.detail.elt === searchBtn) {
+                const movie = document.getElementById('movie').value.trim();
+                const extra = document.getElementById('extra').value;
+
+                // Check if movie is empty and cancel the request
+                if (!movie) {
+                    evt.preventDefault();
+
+                    const movieInput = document.getElementById('movie');
+                    movieInput.classList.add('input-error');
+                    movieInput.focus();
+
+                    movieInput.addEventListener('input', function() {
+                        movieInput.classList.remove('input-error');
+                    }, { once: true });
+
+                    return;
+                }
+
+                // Update the parameters with current values
+                evt.detail.parameters.movie = movie;
+                evt.detail.parameters.extra = extra;
+            }
+        });
+    });
+
 
     let modalShowTime = 0;
     let pendingDownload = null;
