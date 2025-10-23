@@ -218,7 +218,7 @@ fi
 # --- Status Check Loop ---
 # Check if the containers have finished starting
 PROJECT_NAME="$(basename "$(pwd)")" # Get the current directory name as the default project name
-MAX_WAIT_TIME=60 # Maximum time to wait (seconds)
+MAX_WAIT_TIME=120 # Maximum time to wait (seconds)
 WAIT_INTERVAL=5  # Check every 5 seconds
 TIME_ELAPSED=0
 
