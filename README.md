@@ -32,7 +32,7 @@ See video for instructions: https://www.youtube.com/watch?v=Gf45f5cW6c4&t=329s
 #### Installation
  ```bash
  1. Run install script & follow the prompts:
- curl -s https://raw.githubusercontent.com/Luci0/shitflix/master/install.sh -o ./shitflix_installer.sh \
+ curl -s https://raw.githubusercontent.com/Luci0/shitflix/refs/heads/master/install.sh -o ./shitflix_installer.sh \
  && chmod +x shitflix_installer.sh \
  && ./shitflix_installer.sh; EXIT_CODE=$? \
  && rm shitflix_installer.sh 
