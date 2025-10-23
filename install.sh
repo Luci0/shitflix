@@ -117,8 +117,8 @@ read -r -p "Enter Filelist API Key: " FILELIST_API_KEY
 read -r -p "Enter TMDB API Key: " TMDB_API_KEY
 
 # Basic validation for API keys (check if not empty)
-if [ -z "$FILELIST_API_KEY" ] || [ -z "$TMDB_API_KEY" ]; then
-    echo "❌ Error: Both Filelist and TMDB API Keys must be provided."
+if [ -z "$FILELIST_API_KEY" ]; then
+    echo "❌ Error: Filelist API Key must be provided."
     exit 1
 fi
 
