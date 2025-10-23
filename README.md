@@ -5,6 +5,22 @@ Media server automation, for automatically downloading what is trending.
  - **Filelist.io** for sailing the high seas
  - **Jellyfin** to manage your media library
 
+#### How it works 
+    - A cron job runs every night at 3.am (can be changed to any time)
+        to fetch the trending movies from TMDB
+    - These are added to a wishlist filelist
+    - The wishlist is checked against the Filelist.io API
+    - If a match is found, the torrent is downloaded to the specified directory
+    - Jellyfin monitors this directory and adds new content to your library
+
+#### Features
+    - Automatically fetches trending movies and TV shows from TMDB
+    - Adds them to a wishlist on Filelist.io
+    - Dashboard for manual downloading of torrent, managing wishlist and banlist
+    - Transmission torrent client web UI for managing torrents
+    - Jellyfin media server for managing and streaming your media library
+    - Optional hardware acceleration for Jellyfin   
+
 #### Requirements
  - A server running Docker
  - A Filelist.io account with API access
