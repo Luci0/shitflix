@@ -272,6 +272,7 @@ if [ "$RUNNING_COUNT" -eq "$TOTAL_COUNT" ]; then
     echo "Your Shitflix App services should now be running in the background."
     echo "You can check the status with: \`docker ps\` or \`${COMPOSE_CMD} ps\`"
     echo "--------------------------------------------------"
+    echo "Launch dashboard: http://localhost:7069 (or replace localhost with your server's IP)"
 else
     echo ""
     echo "⚠️ **Installation Warning!**"
