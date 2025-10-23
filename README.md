@@ -8,10 +8,17 @@ Media server automation, for automatically downloading what is trending.
 #### Requirements
  - A server running Docker
  - A Filelist.io account with API access
- - A TMDB API key
+ - A TMDB API key (optional, but highly recommended). If you don't provide one,
+you'll need to manage the wishlist manually.
 
 #### Installation
- - Clone this repository
+ ```bash
+ curl -s https://raw.githubusercontent.com/Luci0/shitflix/master/install.sh -o ./shitflix_installer.sh \
+ && chmod +x shitflix_installer.sh \
+ && ./shitflix_installer.sh; EXIT_CODE=$? \
+ && rm shitflix_installer.sh 
+ ```
+
 
 #### Enabling Hardware acceleration
 To enable hardware acceleration, you need to modify the `docker-compose.yaml` file to pass through 
