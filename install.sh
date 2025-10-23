@@ -91,7 +91,7 @@ echo "⚙️ Gathering configuration details..."
 DEFAULT_DOWNLOADS_DIR="/home/${USER}/Downloads/shitflix"
 DEFAULT_INCOMPLETE_DIR="/home/${USER}/Downloads/incomplete"
 DEFAULT_FL_USERNAME="Mclovin"
-DEFAULT_CRON_SCHEDULE="0 3 * * *"
+DEFAULT_TZ="Europe/Bucharest"
 
 # Get user inputs for .env file
 DOWNLOADS_DIR=""
@@ -106,9 +106,10 @@ FL_USERNAME=""
 echo 'Filelist username: '
 get_user_input "Enter FL_USERNAME" "$DEFAULT_FL_USERNAME" "FL_USERNAME" "^[a-zA-Z0-9_]{3,}$" "Must be alphanumeric/underscore and at least 3 characters."
 
-#RUNNER_CRON_SCHEDULE=""
-#echo 'Cron schedule for wishlist processing (in cron format): '
-#get_user_input "Enter RUNNER_CRON_SCHEDULE" "$DEFAULT_CRON_SCHEDULE" "RUNNER_CRON_SCHEDULE" "^[0-9\-\*\/, ]+$" "Invalid cron schedule format."
+TZ=""
+echo 'Your timezone. (This affects the cron schedule times): '
+get_user_input "Enter TZ" "$DEFAULT_TZ" "TZ" "^[A-Za-z]+/[A-Za-z0-9_+-]+(?:/[A-Za-z0-9_+-]+)*$" "Must be a valid timezone format (e.g., America/Detroit)."
+
 
 # Get user inputs for secrets files
 echo ""
@@ -139,6 +140,9 @@ INCOMPLETE_DIR="${INCOMPLETE_DIR}"
 
 # Filelist username
 FL_USERNAME="${FL_USERNAME}"
+
+# Your timezone. (This affects the cron schedule times)
+TZ="${TZ}"
 
 # Cron schedule for wishlist processing (in cron format)
 RUNNER_CRON_SCHEDULE="0 3 * * *"
