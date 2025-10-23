@@ -893,7 +893,35 @@
             addBanlistItem();
         }
     });
+    // Add ESC key handler to close modals
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            // Close wishlist modal if open
+            const wishlistModal = document.getElementById('wishlist-modal');
+            if (wishlistModal.classList.contains('show')) {
+                wishlistModal.classList.remove('show');
+            }
 
+            // Close banlist modal if open
+            const banlistModal = document.getElementById('banlist-modal');
+            if (banlistModal.classList.contains('show')) {
+                banlistModal.classList.remove('show');
+            }
+
+            // Close sync modal if open
+            const syncModal = document.getElementById('sync-modal');
+            if (syncModal.classList.contains('show')) {
+                syncModal.classList.remove('show');
+            }
+
+            // Also close download modal if open
+            const downloadModal = document.getElementById('download-modal');
+            if (downloadModal.classList.contains('show')) {
+                downloadModal.classList.remove('show');
+                pendingDownload = null;
+            }
+        }
+    });
 
 </script>
 </body>
