@@ -32,7 +32,7 @@ RUN chmod +x /shitflix/scripts/entrypoint.sh && \
 # Set a default cron schedule
 ENV RUNNER_CRON_SCHEDULE="0 3 * * *"
 
-EXPOSE 9091 3333
+EXPOSE 9091 7069
 
 VOLUME ["/downloads", "/config", "/incomplete", "/shitflix"]
 

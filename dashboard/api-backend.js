@@ -3,7 +3,7 @@ const {spawnSync} = require('child_process');
 const path = require('path');
 
 const app = express();
-const port = process.env.DASHBOARD_PORT || 3333;
+const port = process.env.DASHBOARD_PORT || 7069;
 
 const dldScriptPath = '/shitflix/scripts/dld.sh';
 

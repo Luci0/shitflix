@@ -29,10 +29,22 @@ you'll need to manage the wishlist manually.
 
 #### Installation
  ```bash
+ 1. Run install script & follow the prompts:
  curl -s https://raw.githubusercontent.com/Luci0/shitflix/master/install.sh -o ./shitflix_installer.sh \
  && chmod +x shitflix_installer.sh \
  && ./shitflix_installer.sh; EXIT_CODE=$? \
  && rm shitflix_installer.sh 
+ 
+ 2. Configure jellifyn:
+ Access jellyfin web UI at http://localhost:8096 or http://YOUR_SERVER_IP:8096
+    Follow the setup wizard to create an admin account and set up your media libraries.
+
+ 3. Visit the shitflix dashboard:
+    Access the dashboard at http://localhost:7069 or http://YOUR_SERVER_IP:7069
+ 
+ 4. (Optional) Enable hardware acceleration for jellyfin:
+    See instructions below.
+ 
  ```
 
 

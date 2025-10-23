@@ -255,12 +255,12 @@ if [ "$RUNNING_COUNT" -eq "$TOTAL_COUNT" ]; then
     echo ""
     echo "🎉 **Installation Complete!**"
     echo "Your Shitflix App services should now be running in the background."
-    echo "You can check the status with: \`${COMPOSE_CMD} ps\`"
+    echo "You can check the status with: \`docker ps\` or \`${COMPOSE_CMD} ps\`"
     echo "--------------------------------------------------"
 else
     echo ""
     echo "⚠️ **Installation Warning!**"
     echo "Timed out waiting for all services to start (${RUNNING_COUNT} of ${TOTAL_COUNT} running after ${MAX_WAIT_TIME}s)."
-    echo "The app may still be starting up. Check the status manually with: \`${COMPOSE_CMD} ps\`"
+    echo "The app may still be starting up. Check the status manually with: \`docker ps\` or \`${COMPOSE_CMD} ps\`"
     echo "--------------------------------------------------"
 fi
