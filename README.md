@@ -51,32 +51,50 @@ See video for instructions: https://www.youtube.com/watch?v=Gf45f5cW6c4&t=329s
  - **Q:** I've just installed shitflix, and i have no movies to watch. Do i need to wait until 3am for the downloads? <br>
    **A:** No, can use the sync function from the dashboard to start downloading what is trending right away.<br>
    Also, you can search and download movies in the dashboard. Access the dashboard at http://localhost:7069 or http://YOUR_SERVER_IP:7069
+
+
  - **Q:** How do i monitor the download progress of my torrents? <br>
    **A:** You can monitor the progress of your downloads via the transmission web UI.<br>
    Access it at http://localhost:9091 or http://YOUR_SERVER_IP:9091
+
+
  - **Q:** Why do I need a TMDB API key? <br>
    **A:** The TMDB API key is used to automatically fetch trending movies and TV shows.
    Without it, you'll need to manually manage your wishlist.
+ 
+   
  - **Q:** I already have a jellyfin instance, can I use that instead of the one provided here? <br>
    **A:** Yes, you can use your existing jellyfin instance. Just make sure to point it to the
    download directory specified in the `DOWNLOADS_DIR` environment variable.<br>
    Also, remove the jellyfin container for docker and the jellyfin service from `docker-compose.yaml`.
+
+   
  - **Q:** I already am using plex (or another media server), can I use that instead of jellyfin? <br>
    **A:** Yes, you can use any media server that supports monitoring directories for new content.
    Just point it to the download directory specified in the `DOWNLOADS_DIR` environment variable.<br>
    Also, remove the jellyfin container for docker and the jellyfin service from `docker-compose.yaml`.
+ 
+   
  - **Q:** My API key has been revoked. How do i change it? <br>
    **A:** The API keys are managed in the ./secrets folder of your shitflix installation directory.<br>
    Simply edit the filelist-api-key.txt and tmdb-api-key.txt files, and restart the docker containers.
+
+   
  - **Q:** How do I change the download directory? <br>
    **A:** You can change the download directory by modifying the `DOWNLOADS_DIR` environment variable
    in the `.env` file.
+
+   
  - **Q:** How do I change the cron schedule? <br>
    **A:** You can change the cron schedule by modifying the `RUNNER_CRON_SCHEDULE` environment variable
    in the `.env` file. The format is the same as standard cron syntax.
+
+   
  - **Q:** I've manually downloaded a show in the movies directory. How do i move it to the shows directory? <br>
    **A:** You can either move the files manually, or you can use the transmission web UI to change the download location.<br>
    Transmission web UI is accessible at http://localhost:9091 or http://YOUR_SERVER_IP:9091
+ 
+   
  - **Q:** How do I automatically download the latest season of my favourite show?<br>
    **A:** Shows are not yet supported in the automatic wishlist generation.<br>
    However, you may use the shitflix dashboard to download the show straight to the downloads directory on your server.<br>
@@ -86,10 +104,14 @@ See video for instructions: https://www.youtube.com/watch?v=Gf45f5cW6c4&t=329s
    - Southpark Season 09 should also go in the Southpark directory `$DOWNLOADS_DIR/shows/Southpark`
    - Friends Season 01 should go in the Friends directory `$DOWNLOADS_DIR/shows/Friends`
    - etc ... <br>
+
+
  - **Q:** I have a .torrent file, how do I add it to transmission?<br>
    **Q:** You can add the .torrent file to transmission by using the web UI.<br>
    Go to http://localhost:9091 or http://YOUR_SERVER_IP:9091 and click on the "Open Torrent" button.<br>
    Select the .torrent file and choose the download location.
+ 
+   
  - **Q:** How do I update shitflix?<br>
    **A:** To update shitflix, simply pull the latest changes from the GitHub repository and restart the docker containers.
    
