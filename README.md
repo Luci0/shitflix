@@ -1,6 +1,6 @@
 ## Shitflix
 
-Media server automation, for automatically downloading what is trending.
+Media server automation, for automagically downloading what is trending.
  - **TMDB** to get trending movies and TV shows
  - **Filelist.io** for sailing the high seas
  - **Jellyfin** to manage your media library
