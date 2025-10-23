@@ -190,7 +190,15 @@ chmod 600 "$FILELIST_API_KEY_FILE" "$TMDB_API_KEY_FILE"
 echo "✅ Secrets files created and protected."
 echo "--------------------------------------------------"
 
-# 4. Run docker compose up
+# 4. Create download folders if they don't exist on the host
+echo ""
+echo "📁 Ensuring download directories exist on the host..."
+mkdir -p "$DOWNLOADS_DIR"/movies
+mkdir -p "$DOWNLOADS_DIR"/shows
+mkdir -p "$INCOMPLETE_DIR"
+echo "✅ Download directories are set up."
+
+# 5. Run docker compose up
 echo ""
 echo "🚀 Starting app with docker compose up -d..."
 echo "(This may take a while as images are downloaded/built)"
