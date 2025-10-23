@@ -489,6 +489,9 @@
 
                     // Reload the wishlist
                     loadWishlist();
+                    setTimeout(function () {
+                        document.querySelector('#wishlist-content').scrollIntoView({behavior: 'smooth', block: 'end'});
+                    }, 100);
                 } else {
                     alert(data.message || 'Error adding item to wishlist');
                 }
@@ -851,6 +854,9 @@
 
                     // Reload the banlist
                     loadBanlist();
+                    setTimeout(function () {
+                        document.querySelector('#banlist-content').scrollIntoView({behavior: 'smooth', block: 'end'});
+                    }, 100);
                 } else {
                     alert(data.message || 'Error adding item to banlist');
                 }
