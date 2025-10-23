@@ -39,7 +39,7 @@ See video for instructions: https://www.youtube.com/watch?v=Gf45f5cW6c4&t=329s
  Access jellyfin web UI at http://localhost:8096 or http://YOUR_SERVER_IP:8096
     Follow the setup wizard to create an admin account and set up your media libraries.
 
- 3. Visit the shitflix dashboard:
+ 3. Visit the shitflix dashboard, and do your first sync.
     Access the dashboard at http://localhost:7069 or http://YOUR_SERVER_IP:7069
  
  4. (Optional) Enable hardware acceleration for jellyfin:
@@ -48,9 +48,15 @@ See video for instructions: https://www.youtube.com/watch?v=Gf45f5cW6c4&t=329s
  ```
 
 #### FAQ
+ - **Q:** I've just installed shitflix, and i have no movies to watch. Do i need to wait until 3am for the downloads? <br>
+   **A:** No, can use the sync function from the dashboard to start downloading what is trending right away.<br>
+   Also, you can search and download movies in the dashboard. Access the dashboard at http://localhost:7069 or http://YOUR_SERVER_IP:7069
+ - **Q:** How do i monitor the download progress of my torrents? <br>
+   **A:** You can monitor the progress of your downloads via the transmission web UI.<br>
+   Access it at http://localhost:9091 or http://YOUR_SERVER_IP:9091
  - **Q:** Why do I need a TMDB API key? <br>
    **A:** The TMDB API key is used to automatically fetch trending movies and TV shows.
-   Without it, you'll need to manually manage the wishlist on Filelist.io.
+   Without it, you'll need to manually manage your wishlist.
  - **Q:** I already have a jellyfin instance, can I use that instead of the one provided here? <br>
    **A:** Yes, you can use your existing jellyfin instance. Just make sure to point it to the
    download directory specified in the `DOWNLOADS_DIR` environment variable.<br>
@@ -59,6 +65,9 @@ See video for instructions: https://www.youtube.com/watch?v=Gf45f5cW6c4&t=329s
    **A:** Yes, you can use any media server that supports monitoring directories for new content.
    Just point it to the download directory specified in the `DOWNLOADS_DIR` environment variable.<br>
    Also, remove the jellyfin container for docker and the jellyfin service from `docker-compose.yaml`.
+ - **Q:** My API key has been revoked. How do i change it? <br>
+   **A:** The API keys are managed in the ./secrets folder of your shitflix installation directory.<br>
+   Simply edit the filelist-api-key.txt and tmdb-api-key.txt files, and restart the docker containers.
  - **Q:** How do I change the download directory? <br>
    **A:** You can change the download directory by modifying the `DOWNLOADS_DIR` environment variable
    in the `.env` file.
