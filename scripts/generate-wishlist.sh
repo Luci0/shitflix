@@ -50,7 +50,16 @@ videoQuality=${WISHLIST_VIDEO_QUALITY:-1080}
 
 echo "min release year is $((crtyear - maxYearsOld))"
 
-"$script_dir/tmdb.sh" \
+tmdb_output=$("$script_dir/tmdb.sh")
+tmdb_status=$?
+
+if [ $tmdb_status -ne 0 ]; then
+  echo "WARNING: Skipping wishlist generation due to TMDB error ..."
+  echo "$tmdb_output"
+  exit 1
+fi
+
+echo "$tmdb_output" \
 | jq --arg CRT_YEAR "$crtyear" --arg MIN_VOTE_AVERAGE "$minVoteAverage" --arg MAX_YEARS_OLD "$maxYearsOld" \
 'select(
   (.vote_average > ($MIN_VOTE_AVERAGE|tonumber)) and

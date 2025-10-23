@@ -13,6 +13,13 @@ if [ -z "$TMDB_APIKEY" ]; then
   TMDB_APIKEY=$(tr -d '\n' < /run/secrets/tmdb-api-key)
 fi
 
+health_check_url="https://api.themoviedb.org/3/trending/movie/week?api_key=$TMDB_APIKEY"
+http_status=$(curl -s -o /dev/null -w "%{http_code}" "$health_check_url")
+
+if [ "$http_status" -ne 200 ]; then
+    echo "ERROR: TMDB_APIKEY is invalid or TMDB API is unreachable (HTTP $http_status)."
+    exit 1
+fi
 
 apiRespTrend=$(curl -s "https://api.themoviedb.org/3/trending/movie/week?api_key=$TMDB_APIKEY")
 apiRespTrendDay=$(curl -s "https://api.themoviedb.org/3/trending/movie/day?api_key=$TMDB_APIKEY")
