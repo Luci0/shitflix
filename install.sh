@@ -95,16 +95,20 @@ DEFAULT_CRON_SCHEDULE="0 3 * * *"
 
 # Get user inputs for .env file
 DOWNLOADS_DIR=""
-get_user_input "Enter DOWNLOADS_DIR" "$DEFAULT_DOWNLOADS_DIR" "DOWNLOADS_DIR" "^/" "Must be an absolute path (starts with /)."
+echo 'Save location for completed downloads: '
+get_user_input "DOWNLOADS_DIR" "$DEFAULT_DOWNLOADS_DIR" "DOWNLOADS_DIR" "^/" "Must be an absolute path (starts with /)."
 
 INCOMPLETE_DIR=""
+echo 'Temporary location of incomplete downloads: '
 get_user_input "Enter INCOMPLETE_DIR" "$DEFAULT_INCOMPLETE_DIR" "INCOMPLETE_DIR" "^/" "Must be an absolute path (starts with /)."
 
 FL_USERNAME=""
+echo 'Filelist username: '
 get_user_input "Enter FL_USERNAME" "$DEFAULT_FL_USERNAME" "FL_USERNAME" "^[a-zA-Z0-9_]{3,}$" "Must be alphanumeric/underscore and at least 3 characters."
 
-RUNNER_CRON_SCHEDULE=""
-get_user_input "Enter RUNNER_CRON_SCHEDULE" "$DEFAULT_CRON_SCHEDULE" "RUNNER_CRON_SCHEDULE" "^[0-9\-\*\/, ]+$" "Invalid cron schedule format."
+#RUNNER_CRON_SCHEDULE=""
+#echo 'Cron schedule for wishlist processing (in cron format): '
+#get_user_input "Enter RUNNER_CRON_SCHEDULE" "$DEFAULT_CRON_SCHEDULE" "RUNNER_CRON_SCHEDULE" "^[0-9\-\*\/, ]+$" "Invalid cron schedule format."
 
 # Get user inputs for secrets files
 echo ""
@@ -124,10 +128,20 @@ echo "📝 Creating ${ENV_FILE}..."
 
 cat > "$ENV_FILE" << EOF
 # --- Shitflix App Environment Variables ---
+
+################## REQUIRED ################
+
+# Save location for completed downloads
 DOWNLOADS_DIR="${DOWNLOADS_DIR}"
+
+# Temporary location of incomplete downloads
 INCOMPLETE_DIR="${INCOMPLETE_DIR}"
+
+# Filelist username
 FL_USERNAME="${FL_USERNAME}"
-RUNNER_CRON_SCHEDULE="${RUNNER_CRON_SCHEDULE}"
+
+# Cron schedule for wishlist processing (in cron format)
+RUNNER_CRON_SCHEDULE="0 3 * * *"
 
 ################## OPTIONAL ################
 
