@@ -997,4 +997,40 @@ input[type="text"]::placeholder {
 .banlist-description strong {
     color: #e0e0e0;
 }
+.wishlist-description {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 1.5rem;
+    color: #b0b0b0;
+    line-height: 1.6;
+}
+
+.wishlist-description p {
+    margin: 0.5rem 0;
+}
+
+.wishlist-description p:first-child {
+    margin-top: 0;
+}
+
+.wishlist-description p:last-child {
+    margin-bottom: 0;
+}
+
+.wishlist-description strong {
+    color: #e0e0e0;
+}
+.wishlist-warning {
+    background: #3a1a1a;
+    border-left: 3px solid #e74c3c;
+    padding: 0.75rem;
+    margin-top: 1rem !important;
+    border-radius: 4px;
+}
+
+.wishlist-warning strong {
+    color: #ff6b6b;
+}
 

@@ -93,6 +93,15 @@
             <h2>📝 Movie Wishlist</h2>
             <button class="close-wishlist-btn">&times;</button>
         </div>
+        <div class="wishlist-description">
+            <p><strong>About the Wishlist:</strong></p>
+            <p>The wishlist is updated nightly and when running the sync action.</p>
+            <p>It's recommended that you add the movie name followed by the year (Ex: The.Matrix.1999).</p>
+            <p>Items are removed from the wishlist after downloading. </p>
+            <p>Old items from the wishlist are automaticly cleared after a while. (Default 3 months)</p>
+            <p class="wishlist-warning">⚠️ <strong>Warning:</strong>
+                Keep you wishlists fairly small. (Max ~100 items) </p>
+        </div>
         <div class="wishlist-add-section">
             <div class="add-form-row">
                 <select id="add-type" class="add-input">
@@ -144,6 +153,7 @@
         </div>
         <div class="sync-body">
             <div class="sync-description">
+                <p><strong>About sync:</strong></p>
                 <p>Sync action updates your wishlist with the latest trending media from TMDB.</p>
                 <p>Then it processes the wishlist, and tries to download all of it.</p>
                 <p>Basically it runs the automatic nightly sync, on demand.</p>
