@@ -196,6 +196,13 @@ echo "📁 Ensuring download directories exist on the host..."
 mkdir -p "$DOWNLOADS_DIR"/movies
 mkdir -p "$DOWNLOADS_DIR"/shows
 mkdir -p "$INCOMPLETE_DIR"
+
+# Set permissions
+sudo chown "$USER":"$USER" "$DOWNLOADS_DIR"
+sudo chown "$USER":"$USER" "$INCOMPLETE_DIR"
+sudo chown "$USER":"$USER" "$DOWNLOADS_DIR"/movies
+sudo chown "$USER":"$USER" "$DOWNLOADS_DIR"/shows
+
 echo "✅ Download directories are set up."
 
 # 5. Run docker compose up
