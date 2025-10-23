@@ -25,7 +25,9 @@ Media server automation, for automatically downloading what is trending.
  - A server running Docker
  - A Filelist.io account with API access
  - A TMDB API key (optional, but highly recommended). If you don't provide one,
-you'll need to manage the wishlist manually.
+you'll need to manage the wishlist manually. <br> 
+Sign up for a free account at https://www.themoviedb.org/. <br>
+See video for instructions: https://www.youtube.com/watch?v=Gf45f5cW6c4&t=329s
 
 #### Installation
  ```bash
