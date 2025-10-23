@@ -358,6 +358,8 @@
         fetch('/get-wishlist')
             .then(response => response.json())
             .then(data => {
+                document.querySelector('.wishlist-header h2').innerHTML = `📝 Movie Wishlist <span class="list-count">(${data.length})</span>`;
+
                 const wishlistContent = document.getElementById('wishlist-content');
 
                 if (data.length === 0) {
@@ -736,6 +738,8 @@
         fetch('/get-banlist')
             .then(response => response.json())
             .then(data => {
+                document.querySelector('.banlist-header h2').innerHTML = `🚫 Media Banlist <span class="list-count">(${data.length})</span>`;
+
                 const banlistContent = document.getElementById('banlist-content');
 
                 if (data.length === 0) {
