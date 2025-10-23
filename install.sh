@@ -128,6 +128,26 @@ DOWNLOADS_DIR="${DOWNLOADS_DIR}"
 INCOMPLETE_DIR="${INCOMPLETE_DIR}"
 FL_USERNAME="${FL_USERNAME}"
 RUNNER_CRON_SCHEDULE="${RUNNER_CRON_SCHEDULE}"
+
+################## OPTIONAL ################
+
+# Maximum number of results allowed before needing to refine search
+FL_RESULTS_MAX_THRESHOLD=10
+
+# Maximum number of years old a movie can be to be considered for download
+# Example: if set to 2, only movies released in the last 2 years will be added to the wishlist
+TMDB_MAX_YEARS_OLD=2
+
+#Default video quality for wishlist generation
+WISHLIST_VIDEO_QUALITY=1080
+
+# Default cutoff date for cleaning the wishlist (relative date string)
+# Example: "3 months ago", "1 months ago", "20 days ago" ... etc
+# If any movie was added to the wishlist before this date, it will be removed during cleanup
+# If you have a very big wishlist, the filelist API will be spammed with requests, and
+# you may get temporarily banned. Setting a cutoff date helps mitigate this.
+WISHLIST_CLEANUP_CUTOFF_DATE_STR="3 months ago"
+
 EOF
 
 echo "✅ ${ENV_FILE} created with the following content:"
