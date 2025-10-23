@@ -28,13 +28,14 @@ Sign up for a free account at https://www.themoviedb.org/. <br>
 See video for instructions: https://www.youtube.com/watch?v=Gf45f5cW6c4&t=329s
 
 #### Installation
- ```bash
+ 
  1. Run install script & follow the prompts:
+```bash
  curl -s https://raw.githubusercontent.com/Luci0/shitflix/refs/heads/master/install.sh -o ./shitflix_installer.sh \
  && chmod +x shitflix_installer.sh \
  && ./shitflix_installer.sh; EXIT_CODE=$? \
  && rm shitflix_installer.sh 
- 
+ ```
  2. Configure jellifyn:
  Access jellyfin web UI at http://localhost:8096 or http://YOUR_SERVER_IP:8096
     Follow the setup wizard to create an admin account and set up your media libraries.
@@ -45,7 +46,7 @@ See video for instructions: https://www.youtube.com/watch?v=Gf45f5cW6c4&t=329s
  4. (Optional) Enable hardware acceleration for jellyfin:
     See instructions below.
  
- ```
+
 
 #### FAQ
  - **Q:** I've just installed shitflix, and i have no movies to watch. Do i need to wait until 3am for the downloads? <br>
