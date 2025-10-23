@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Configuration
-REPO_URL="https://github.com/Luci0/shitflix.git" # <-- **UPDATE THIS**
-REPO_FOLDER="shitflix"      # Adjust to your repository name
+REPO_URL="git@github.com:Luci0/shitflix.git"
+REPO_FOLDER="shitflix"
 ENV_FILE="./.env"
 SECRET_DIR="./secrets"
 FILELIST_API_KEY_FILE="${SECRET_DIR}/filelist-api-key.txt"
