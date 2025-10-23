@@ -37,28 +37,20 @@ check_dependencies() {
     echo "✅ Dependencies (git, docker, docker compose) check passed."
 }
 
-# Function to get user input with default and validation
+# Function to get user input with default (RELIABLE standard method)
 get_user_input() {
     local prompt="$1"
     local default_val="$2"
-    local var_name="$3"
-    local validation_regex="$4"
-    local error_msg="$5"
+    local -n var_name="$3" # Nameref for reliable assignment
     local input
 
-    while true; do
-        read -r -p "${prompt} (default: ${default_val}): " input
-        input="${input:-${default_val}}" # Use default if input is empty
+    # -e: enables readline command line editing (critical for -i to work)
+    # -i: pre-fills the input buffer with the default value
+    read -r -e -p "${prompt}: " -i "${default_val}" input
 
-        if [[ -n "$validation_regex" && ! "$input" =~ $validation_regex ]]; then
-            echo "❌ Validation Error: ${error_msg}"
-            continue
-        fi
-
-        # Assign the validated or default value to the referenced variable
-        eval "${var_name}='${input}'"
-        break
-    done
+    # If the user hits Enter, $input will contain the default_val due to -i.
+    # We assign the value directly.
+    var_name="${input}"
 }
 
 # --- Main Script Logic ---
@@ -117,8 +109,8 @@ get_user_input "Enter RUNNER_CRON_SCHEDULE" "$DEFAULT_CRON_SCHEDULE" "RUNNER_CRO
 # Get user inputs for secrets files
 echo ""
 echo "🔑 Gathering API Keys (required for app functionality)..."
-read -r -p "Enter **Filelist API Key**: " FILELIST_API_KEY
-read -r p "Enter **TMDB API Key**: " TMDB_API_KEY
+read -r -p "Enter Filelist API Key: " FILELIST_API_KEY
+read -r -p "Enter TMDB API Key: " TMDB_API_KEY
 
 # Basic validation for API keys (check if not empty)
 if [ -z "$FILELIST_API_KEY" ] || [ -z "$TMDB_API_KEY" ]; then
@@ -166,29 +158,72 @@ echo ""
 echo "🚀 Starting app with docker compose up -d..."
 echo "(This may take a while as images are downloaded/built)"
 
-# Use 'docker compose' (v2) if available, otherwise fallback to 'docker-compose' (v1)
+# Define the docker compose command dynamically
 if command -v docker-compose &> /dev/null; then
-    echo 'run docker-compose up -d'
-#    docker-compose up -d
+    COMPOSE_CMD="docker-compose"
 elif docker compose version &> /dev/null; then
-    echo 'run docker compose up -d'
-#    docker compose up -d
+    COMPOSE_CMD="docker compose"
 else
-    # This shouldn't happen due to the check_dependencies function, but as a safeguard.
     echo "❌ Error: Cannot find docker compose command."
     exit 1
 fi
 
-if [ $? -eq 0 ]; then
+# Run the docker compose up command and capture its exit status
+if ! $COMPOSE_CMD up -d; then
+    echo ""
+    echo "❌ **Installation Failed!**"
+    echo "There was an error running \`${COMPOSE_CMD} up -d\`."
+    echo "Please check the output above for errors."
+    echo "--------------------------------------------------"
+    exit 1
+fi
+
+# --- Status Check Loop ---
+# Check if the containers have finished starting
+PROJECT_NAME="$(basename "$(pwd)")" # Get the current directory name as the default project name
+MAX_WAIT_TIME=60 # Maximum time to wait (seconds)
+WAIT_INTERVAL=5  # Check every 5 seconds
+TIME_ELAPSED=0
+
+echo ""
+echo "⏳ Waiting for containers in '${PROJECT_NAME}' to start (Max ${MAX_WAIT_TIME}s)..."
+
+while [ $TIME_ELAPSED -lt $MAX_WAIT_TIME ]; do
+    # Command to check if all containers are running (Status is "running")
+    # This command checks if the number of 'running' containers equals the total number of containers
+    RUNNING_COUNT=$($COMPOSE_CMD ps --format json | jq -r 'select(.State == "running") | .Name' | wc -l)
+    TOTAL_COUNT=$($COMPOSE_CMD ps --format json | jq -r '.Name' | wc -l)
+
+    # If jq is not installed, the above lines will fail. Using a more basic check:
+    if ! command -v jq &> /dev/null; then
+        RUNNING_CHECK=$($COMPOSE_CMD ps --services --filter "status=running" | wc -l)
+        TOTAL_CHECK=$($COMPOSE_CMD ps --services | wc -l)
+        RUNNING_COUNT=$RUNNING_CHECK
+        TOTAL_COUNT=$TOTAL_CHECK
+        # Note: This simple count might not be 100% reliable as it counts service names, not running instances.
+    fi
+
+    if [ "$RUNNING_COUNT" -gt 0 ] && [ "$RUNNING_COUNT" -eq "$TOTAL_COUNT" ]; then
+        echo "✅ All ${TOTAL_COUNT} services are running!"
+        break # Exit the loop on success
+    fi
+
+    echo "   Status: ${RUNNING_COUNT} of ${TOTAL_COUNT} services running. Retrying in ${WAIT_INTERVAL}s..."
+
+    sleep $WAIT_INTERVAL
+    TIME_ELAPSED=$((TIME_ELAPSED + WAIT_INTERVAL))
+done
+
+if [ "$RUNNING_COUNT" -eq "$TOTAL_COUNT" ]; then
     echo ""
     echo "🎉 **Installation Complete!**"
     echo "Your Shitflix App services should now be running in the background."
-    echo "You can check the status with: \`docker compose ps\`"
+    echo "You can check the status with: \`${COMPOSE_CMD} ps\`"
     echo "--------------------------------------------------"
 else
     echo ""
-    echo "❌ **Installation Failed!**"
-    echo "There was an error running \`docker compose up -d\`."
-    echo "Please check the output above for errors."
+    echo "⚠️ **Installation Warning!**"
+    echo "Timed out waiting for all services to start (${RUNNING_COUNT} of ${TOTAL_COUNT} running after ${MAX_WAIT_TIME}s)."
+    echo "The app may still be starting up. Check the status manually with: \`${COMPOSE_CMD} ps\`"
     echo "--------------------------------------------------"
 fi
