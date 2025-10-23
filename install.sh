@@ -58,7 +58,6 @@ get_user_input() {
 echo "🎬 Starting Shitflix App Installation Script"
 echo "--------------------------------------------------"
 
-# 4. Validate inputed values and check deps
 check_dependencies
 
 # 1. Checkout repo from github
@@ -191,7 +190,7 @@ chmod 600 "$FILELIST_API_KEY_FILE" "$TMDB_API_KEY_FILE"
 echo "✅ Secrets files created and protected."
 echo "--------------------------------------------------"
 
-# 5. Run docker compose up
+# 4. Run docker compose up
 echo ""
 echo "🚀 Starting app with docker compose up -d..."
 echo "(This may take a while as images are downloaded/built)"
