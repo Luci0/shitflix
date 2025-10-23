@@ -338,6 +338,7 @@
                 document.getElementById('preloader-modal').classList.remove('show');
                 pendingDownload = null;
                 modalShowTime = 0;
+                document.querySelector('.service-buttons').scrollIntoView({behavior: 'smooth', block: 'start'});
             }, remainingTime);
         }
     });
