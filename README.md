@@ -36,7 +36,7 @@ See video for instructions: https://www.youtube.com/watch?v=Gf45f5cW6c4&t=329s
  && ./shitflix_installer.sh; EXIT_CODE=$? \
  && rm shitflix_installer.sh 
  ```
- 2. Configure jellifyn:
+ 2. Configure jellyfin:
  Access jellyfin web UI at http://localhost:8096 or http://YOUR_SERVER_IP:8096
     Follow the setup wizard to create an admin account and set up your media libraries.
 
