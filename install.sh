@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-REPO_URL="git@github.com:Luci0/shitflix.git"
+REPO_URL="https://github.com/Luci0/shitflix.git"
 REPO_FOLDER="shitflix"
 ENV_FILE="./.env"
 SECRET_DIR="./secrets"
