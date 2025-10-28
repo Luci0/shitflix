@@ -20,13 +20,9 @@ services:
       # Bind mounts for media libraries (Source:Target)
       - ${DOWNLOADS_DIR}/shows:/shows
       - ${DOWNLOADS_DIR}/movies:/movies
-
-    # Configuration for GPU passthrough
-#    deploy:
-#      resources:
-#        reservations:
-#          devices:
-#            - capabilities: [gpu]
+      - ${DOWNLOADS_DIR}/flac:/flac
+      - /mnt/slow1/movies:/movies_og
+      - /mnt/slow1/shows:/shows_og
 
   torrent-client:
     build:
@@ -40,6 +36,8 @@ services:
       weight: 200
     volumes:
       - ${DOWNLOADS_DIR}:/downloads
+      - /mnt/slow1/movies:/movies_og
+      - /mnt/slow1/shows:/shows_og
       - transmission-config:/config
       - shitflix:/shitflix
     env_file:
