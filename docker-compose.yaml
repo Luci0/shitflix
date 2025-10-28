@@ -9,6 +9,9 @@ services:
     env_file:
       - .env
 
+    cpu_shares: 4096
+    blkio_config:
+      weight: 800
     volumes:
       # Named volumes for persistent configuration and cache data
       - jellyfin-config:/config
@@ -17,13 +20,9 @@ services:
       # Bind mounts for media libraries (Source:Target)
       - ${DOWNLOADS_DIR}/shows:/shows
       - ${DOWNLOADS_DIR}/movies:/movies
-
-    # Configuration for GPU passthrough
-#    deploy:
-#      resources:
-#        reservations:
-#          devices:
-#            - capabilities: [gpu]
+      - ${DOWNLOADS_DIR}/flac:/flac
+      - /mnt/slow1/movies:/movies_og
+      - /mnt/slow1/shows:/shows_og
 
   torrent-client:
     build:
@@ -36,6 +35,8 @@ services:
     volumes:
       - ${DOWNLOADS_DIR}:/downloads
       - ${INCOMPLETE_DIR}:/incomplete
+      - /mnt/slow1/movies:/movies_og
+      - /mnt/slow1/shows:/shows_og
       - transmission-config:/config
       - shitflix:/shitflix
     env_file:
