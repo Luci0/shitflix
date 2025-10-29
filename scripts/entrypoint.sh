@@ -18,8 +18,11 @@ set -a  # Mark all new variables for export
 set +a  # Turn off auto-export
 
 # Run the main script with environment properly set
-exec /shitflix/scripts/clean-old-wishlist-entries.sh
-exec /shitflix/scripts/shitflix-runner.sh
+/shitflix/scripts/clean-old-wishlist-entries.sh
+/shitflix/scripts/shitflix-runner.sh
+
+# Fix ownership so shitflix user can access the files
+chown shitflix:shitflix /shitflix/scripts/txts/wishlist.txt /shitflix/scripts/txts/banlist.txt
 EOF
 chmod +x /shitflix/scripts/cron-wrapper.sh
 
