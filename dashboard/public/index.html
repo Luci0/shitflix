@@ -944,10 +944,33 @@
             tooltip.style.padding = '8px 16px';
             tooltip.style.borderRadius = '6px';
             tooltip.style.zIndex = 9999;
-            tooltip.style.left = `${rect.left + window.scrollX + rect.width / 2}px`;
-            tooltip.style.top = `${rect.top + window.scrollY - 10}px`; // 10px above the element
-            tooltip.style.transform = 'translate(-50%, -100%)';
+            tooltip.style.maxWidth = '90vw';
+            tooltip.style.wordBreak = 'break-word';
+            tooltip.style.textAlign = 'center';
+
+            // Calculate initial position
+            let left = rect.left + window.scrollX + rect.width / 2;
+            let top = rect.top + window.scrollY - 10;
+
+            // Temporarily add to body to measure width
+            tooltip.style.visibility = 'hidden';
             document.body.appendChild(tooltip);
+            const tooltipRect = tooltip.getBoundingClientRect();
+
+            // Adjust if overflowing left/right
+            let adjustedLeft = left;
+            if (tooltipRect.width > window.innerWidth) {
+                tooltip.style.width = '90vw';
+            }
+            if (left - tooltipRect.width / 2 < 0) {
+                adjustedLeft = tooltipRect.width / 2 + 8;
+            } else if (left + tooltipRect.width / 2 > window.innerWidth) {
+                adjustedLeft = window.innerWidth - tooltipRect.width / 2 - 8;
+            }
+            tooltip.style.left = `${adjustedLeft}px`;
+            tooltip.style.top = `${top}px`;
+            tooltip.style.transform = 'translate(-50%, -100%)';
+            tooltip.style.visibility = 'visible';
 
             setTimeout(() => {
                 tooltip.remove();
