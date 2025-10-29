@@ -229,6 +229,12 @@ input[type="text"]::placeholder {
 }
 
 /* Center the download column header and content */
+.results-table th:first-child,
+.results-table td:first-child {
+    text-align: center;
+}
+
+/* Center the IMDB column header and content */
 .results-table th:last-child,
 .results-table td:last-child {
     text-align: center;
