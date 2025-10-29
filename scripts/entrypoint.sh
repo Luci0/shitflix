@@ -4,7 +4,10 @@
 set -e
 
 # Export all environment variables to a file that cron jobs can source
-printenv > /etc/environment
+printenv | while IFS='=' read -r key value; do
+  value_escaped=$(printf '%s' "$value" | sed 's/"/\\"/g')
+  printf '%s="%s"\n' "$key" "$value_escaped"
+done > /etc/environment
 
 # Create a wrapper script that properly exports environment before running
 cat > /shitflix/scripts/cron-wrapper.sh << 'EOF'
