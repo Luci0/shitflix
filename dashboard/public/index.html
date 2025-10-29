@@ -905,7 +905,7 @@
         }
     });
     // Add ESC key handler to close modals
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             // Close wishlist modal if open
             const wishlistModal = document.getElementById('wishlist-modal');
@@ -933,7 +933,27 @@
             }
         }
     });
+    document.body.addEventListener('touchstart', function (e) {
+        if (e.target.classList.contains('movie-name')) {
+            const rect = e.target.getBoundingClientRect();
+            const tooltip = document.createElement('div');
+            tooltip.textContent = e.target.textContent;
+            tooltip.style.position = 'absolute';
+            tooltip.style.background = '#a855f7';
+            tooltip.style.color = '#fff';
+            tooltip.style.padding = '8px 16px';
+            tooltip.style.borderRadius = '6px';
+            tooltip.style.zIndex = 9999;
+            tooltip.style.left = `${rect.left + window.scrollX + rect.width / 2}px`;
+            tooltip.style.top = `${rect.top + window.scrollY - 10}px`; // 10px above the element
+            tooltip.style.transform = 'translate(-50%, -100%)';
+            document.body.appendChild(tooltip);
 
+            setTimeout(() => {
+                tooltip.remove();
+            }, 2500);
+        }
+    });
 </script>
 </body>
 </html>

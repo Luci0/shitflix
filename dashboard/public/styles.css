@@ -1034,3 +1034,107 @@ input[type="text"]::placeholder {
     color: #ff6b6b;
 }
 
+@media (max-width: 900px) {
+    .container {
+        max-width: 98vw;
+        padding: 1rem;
+    }
+    .search-form, .wishlist-modal-content, .banlist-modal-content, .sync-modal-content {
+        padding: 1rem;
+        border-radius: 10px;
+    }
+    .modal-content, .modal-content-dld {
+        padding: 20px;
+        min-width: 90vw;
+        min-height: 200px;
+    }
+    .wishlist-modal-content, .banlist-modal-content, .sync-modal-content {
+        width: 98vw;
+        max-width: 98vw;
+        min-width: unset;
+    }
+    .wishlist-header, .banlist-header, .sync-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+        gap: 0.5rem;
+    }
+    .wishlist-add-section, .banlist-add-section {
+        padding: 0.5rem 1rem;
+    }
+    .wishlist-body, .banlist-body, .sync-body {
+        padding: 1rem;
+    }
+    .results-table, .wishlist-table, .banlist-table {
+        font-size: 0.95rem;
+    }
+    .results-header, .sync-description, .banlist-description, .wishlist-description {
+        padding: 0.5rem;
+        font-size: 1rem;
+    }
+    .service-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .service-btn {
+        width: 100%;
+        font-size: 1.1rem;
+        padding: 1rem;
+    }
+    .modal-icon {
+        width: 120px;
+        height: 120px;
+    }
+    .movie-name {
+        max-width: 400px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+    }
+}
+
+@media (max-width: 600px) {
+    .movie-name {
+        max-width: 300px;
+    }
+    body {
+        padding: 0.5rem;
+    }
+    .container {
+        padding: 0.5rem;
+        border-radius: 10px;
+    }
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .results-table, .wishlist-table, .banlist-table {
+        font-size: 0.85rem;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .results-table th, .results-table td,
+    .wishlist-table th, .wishlist-table td,
+    .banlist-table th, .banlist-table td {
+        padding: 0.5rem;
+    }
+    .modal-content, .modal-content-dld {
+        padding: 10px;
+        min-width: 98vw;
+        min-height: 120px;
+    }
+    .modal-form input[type="text"], .add-input {
+        font-size: 0.95rem;
+        padding: 0.5rem;
+    }
+    .confirm-btn, .cancel-btn, .add-btn, .delete-wishlist-btn, .delete-banlist-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.95rem;
+    }
+    .modal-icon {
+        width: 80px;
+        height: 80px;
+    }
+}

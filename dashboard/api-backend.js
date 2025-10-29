@@ -67,12 +67,12 @@ app.get('/get-search-results', (req, res) => {
             <table class="results-table">
                 <thead>
                     <tr>
+                        <th>📥</th>
                         <th>Name</th>
                         <th>Size</th>
                         <th>Seeders</th>
                         <th>Category</th>
-                        <th>IMDB</th>
-                        <th>📥</th>
+                        <th>IMDB</th>                        
                     </tr>
                 </thead>
                 <tbody>
@@ -83,18 +83,18 @@ app.get('/get-search-results', (req, res) => {
 
             tableHtml += `
         <tr>
-            <td class="movie-name">${item.name}</td>
-            <td class="size">${item.sizeInGb ? item.sizeInGb.toFixed(2) + ' GB' : '-'}</td>
-            <td class="seeders">${item.seeders || 0}</td>
-            <td><span class="category">${item.category || '-'}</span></td>
-            <td>${imdbLink}</td>
             <td>
                 <button class="download-btn"
                         data-name="${encodeURIComponent(item.name)}"
                         data-link="${encodeURIComponent(item.download_link)}">
-                    Download
+                    📥
                 </button>
             </td>
+            <td class="movie-name" title="${item.name}">${item.name}</td>
+            <td class="size">${item.sizeInGb ? item.sizeInGb.toFixed(2) + ' GB' : '-'}</td>
+            <td class="seeders">${item.seeders || 0}</td>
+            <td><span class="category">${item.category || '-'}</span></td>
+            <td>${imdbLink}</td>            
         </tr>`;
         });
 
