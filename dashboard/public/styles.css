@@ -578,6 +578,7 @@ input[type="text"]::placeholder {
 
 .add-form-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
     align-items: center;
 }
@@ -596,13 +597,14 @@ input[type="text"]::placeholder {
     border-color: #4a90e2;
 }
 
-#add-type {
+#add-type, #ban-type {
     width: 120px;
 }
 
-#add-name {
+#add-name, #ban-name {
     flex: 1;
-    min-width: 300px;
+    min-width: 100%;
+    order: 2;
 }
 
 .add-quality {
@@ -621,6 +623,7 @@ input[type="text"]::placeholder {
     font-size: 0.95rem;
     transition: all 0.3s;
     white-space: nowrap;
+    order: 3;
 }
 
 .add-btn:hover {
@@ -1142,6 +1145,18 @@ input[type="text"]::placeholder {
     .modal-icon {
         width: 80px;
         height: 80px;
+    }
+}
+
+@media (min-width: 600px) {
+    #add-name, #ban-name {
+        min-width: 350px;
+        max-width: 500px;
+        order: 0;
+    }
+
+    .add-btn {
+        order: 0;
     }
 }
 
