@@ -1144,3 +1144,13 @@ input[type="text"]::placeholder {
         height: 80px;
     }
 }
+
+@media (max-height: 900px) {
+    #wishlist-modal .wishlist-description {
+        display: none;
+    }
+
+    #banlist-modal .banlist-description {
+        display: none;
+    }
+}
