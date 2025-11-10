@@ -1,7 +1,7 @@
 
 services:
   jellyfin:
-    image: jellyfin/jellyfin:10.10.7
+    image: jellyfin/jellyfin:10.11.2
     container_name: jellyfin
     network_mode: host
     user: 1000:1000
