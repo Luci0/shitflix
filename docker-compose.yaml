@@ -20,6 +20,7 @@ services:
       # Bind mounts for media libraries (Source:Target)
       - ${DOWNLOADS_DIR}/shows:/shows
       - ${DOWNLOADS_DIR}/movies:/movies
+      - ${DOWNLOADS_DIR}/flac:/flac
       - /mnt/slow1/movies:/movies_og
       - /mnt/slow1/shows:/shows_og
 
@@ -34,6 +35,8 @@ services:
     volumes:
       - ${DOWNLOADS_DIR}:/downloads
       - ${INCOMPLETE_DIR}:/incomplete
+      - /mnt/slow1/movies:/movies_og
+      - /mnt/slow1/shows:/shows_og
       - transmission-config:/config
       - shitflix:/shitflix
     env_file:
