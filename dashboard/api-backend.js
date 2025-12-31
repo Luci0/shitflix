@@ -143,6 +143,7 @@ app.post('/delete-wishlist-item', async (req, res) => {
     try {
         const { index } = req.body;
         const wishlistPath = '/shitflix/scripts/txts/wishlist.txt';
+        const banlistPath = '/shitflix/scripts/txts/banlist.txt';
 
         // Read the current wishlist
         const content = await fs.readFile(wishlistPath, 'utf8');
@@ -153,11 +154,48 @@ app.post('/delete-wishlist-item', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Invalid index' });
         }
 
+        // Get the item to be removed
+        const itemToRemove = lines[index].trim();
+        const parts = itemToRemove.split(/\s+/);
+
         // Remove the line at the specified index
         lines.splice(index, 1);
 
-        // Write back to file
+        // Write back to wishlist file
         await fs.writeFile(wishlistPath, lines.join('\n') + '\n', 'utf8');
+
+        // Add to banlist if item has valid structure
+        if (parts.length >= 3) {
+            const type = parts[0];
+            const name = parts[1];
+            const quality = parts[2];
+            const today = new Date().toISOString().split('T')[0];
+
+            // Check if already in banlist
+            let banlistContent = '';
+            try {
+                banlistContent = await fs.readFile(banlistPath, 'utf8');
+            } catch (error) {
+                // File might not exist, create it
+                banlistContent = '';
+            }
+
+            const banlistLines = banlistContent.trim().split('\n').filter(line => line.trim());
+
+            const isDuplicate = banlistLines.some(line => {
+                const banParts = line.trim().split(/\s+/);
+                return banParts.length >= 2 && banParts[0] === type && banParts[1] === name;
+            });
+
+            // Only add if not already in banlist
+            if (!isDuplicate) {
+                const newLine = `${type}  ${name}  ${quality}  ${today}\n`;
+                await fs.appendFile(banlistPath, newLine, 'utf8');
+                console.log(`Added to banlist: ${type} ${name} ${quality}`);
+            } else {
+                console.log(`Item already in banlist: ${type} ${name}`);
+            }
+        }
 
         res.json({ success: true });
     } catch (error) {
