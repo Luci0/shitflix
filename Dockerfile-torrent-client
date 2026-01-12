@@ -13,9 +13,9 @@ RUN addgroup -g 1000 shitflix && \
     adduser -u 1000 -G shitflix -D shitflix && \
     apk add --no-cache tzdata transmission-cli=4.0.5-r2 transmission-daemon=4.0.5-r2 \
       transmission-remote=4.0.5-r2 curl jq cronie su-exec coreutils nodejs && \
-    mkdir -p /downloads /config /downloads/incomplete /shitflix /dashboard && \
-    chown -R shitflix:shitflix /downloads /config /downloads/incomplete /shitflix /dashboard && \
-    chmod -R 775 /downloads /config /downloads/incomplete /shitflix /dashboard
+    mkdir -p /downloads /config /incomplete /shitflix /dashboard && \
+    chown -R shitflix:shitflix /downloads /config /incomplete /shitflix /dashboard && \
+    chmod -R 775 /downloads /config /incomplete /shitflix /dashboard
 
 COPY --from=dashboard-builder --chown=shitflix:shitflix /build /dashboard
 
@@ -34,7 +34,7 @@ ENV RUNNER_CRON_SCHEDULE="0 3 * * *"
 
 EXPOSE 9091 7069
 
-VOLUME ["/downloads", "/config", "/downloads/incomplete", "/shitflix"]
+VOLUME ["/downloads", "/config", "/incomplete", "/shitflix"]
 
 # The entrypoint will run as root to set up cron, then switch to the 'shitflix' user.
 ENTRYPOINT ["/shitflix/scripts/entrypoint.sh"]
