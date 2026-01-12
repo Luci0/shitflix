@@ -35,7 +35,7 @@ services:
       - "7069:7069"
     volumes:
       - ${DOWNLOADS_DIR}:/downloads
-      - ${INCOMPLETE_DIR}:/downloads/incomplete
+      - ${INCOMPLETE_DIR}:/incomplete
       - transmission-config:/config
       - shitflix:/shitflix
     env_file:
