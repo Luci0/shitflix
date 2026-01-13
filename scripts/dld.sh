@@ -192,5 +192,11 @@ if [  "$zacnt" -gt 0 ] && [ "$xecute" -eq 1 ];then
 
     echo "Starting download of $torrentName => $link"
     echo "$now Downloading $movieName $link" >> "$script_dir/logs/transmission.log"
+
+    # Save the torrent file
+    torrentFile="$saveDir/$torrentName.torrent"
+    debug_echo "Saving torrent file to $torrentFile"
+    curl -s -o "$torrentFile" "$link"
+
     transmission-remote -a "$link" -w "$saveDir" >> "$script_dir/logs/transmission.log"
 fi
