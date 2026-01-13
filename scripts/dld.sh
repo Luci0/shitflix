@@ -40,7 +40,7 @@ debug_echo()
   fi
 }
 
-while getopts "dmsxQ:q:f:c:" flag; do
+while getopts "dmsxzQ:q:f:c:" flag; do
  case $flag in
    d)
     debugMode=1
@@ -49,6 +49,9 @@ while getopts "dmsxQ:q:f:c:" flag; do
     else
       debug_echo "$SOURCED_DEFAULT"
     fi
+   ;;
+   z)
+    fzfMode=1
    ;;
    f)
     # Check if file exists at the provided path first
@@ -146,7 +149,12 @@ api_result=$(echo "$raw_result" | jq 'sort_by(.size)
 # Escape special regex characters from the movie name
 escapedMovieName=$(echo "$movieName" | sed -e 's/[][\\.*^$(){}?+|]/\\&/g')
 
-api_result=$(echo "$api_result" | jq --arg movieName "$escapedMovieName" 'select(.name | test("^" + $movieName + "\\b"; "i"))')
+if [ -z "$fzfMode" ]; then
+  # By default fzf mode is off, so we filter results to only those that start with the movie name
+  api_result=$(echo "$api_result" | jq --arg movieName "$escapedMovieName" 'select(.name | test("^" + $movieName + "\\b"; "i"))')
+else
+  :
+fi
 
 if [ -z "$extraSearch" ]; then
   :
