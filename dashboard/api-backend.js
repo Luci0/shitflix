@@ -38,7 +38,7 @@ app.get('/get-search-results', (req, res) => {
     const extra = (req.query.extra ?? '').replace(/\s+/g, '.')
 
     // Use array form to properly handle special characters
-    let cmdArray = ['-q', movie];
+    let cmdArray = ['-z', '-q', movie];
     if (extra) {
         cmdArray.push('-Q', extra);
     }
