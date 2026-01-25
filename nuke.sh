@@ -12,6 +12,3 @@ docker volume rm shitflix_shitflix
 
 docker volume rm shitflix_jellyfin-config
 docker volume rm shitflix_jellyfin-cache
-
-# Rebuild and start the service
-docker compose up --build --force-recreate torrent-client -d
