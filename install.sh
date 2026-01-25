@@ -88,7 +88,6 @@ echo "⚙️ Gathering configuration details..."
 
 # Defaults
 DEFAULT_DOWNLOADS_DIR="/home/${USER}/Downloads/shitflix"
-DEFAULT_INCOMPLETE_DIR="/home/${USER}/Downloads/incomplete"
 DEFAULT_FL_USERNAME="Mclovin"
 DEFAULT_TZ="Europe/Bucharest"
 
@@ -97,9 +96,6 @@ DOWNLOADS_DIR=""
 echo 'Save location for completed downloads: '
 get_user_input "DOWNLOADS_DIR" "$DEFAULT_DOWNLOADS_DIR" "DOWNLOADS_DIR" "^/" "Must be an absolute path (starts with /)."
 
-INCOMPLETE_DIR=""
-echo 'Temporary location of incomplete downloads: '
-get_user_input "Enter INCOMPLETE_DIR" "$DEFAULT_INCOMPLETE_DIR" "INCOMPLETE_DIR" "^/" "Must be an absolute path (starts with /)."
 
 FL_USERNAME=""
 echo 'Filelist username: '
@@ -133,9 +129,6 @@ cat > "$ENV_FILE" << EOF
 
 # Save location for completed downloads
 DOWNLOADS_DIR="${DOWNLOADS_DIR}"
-
-# Temporary location of incomplete downloads
-INCOMPLETE_DIR="${INCOMPLETE_DIR}"
 
 # Filelist username
 FL_USERNAME="${FL_USERNAME}"
@@ -193,13 +186,13 @@ echo "--------------------------------------------------"
 # 4. Create download folders if they don't exist on the host
 echo ""
 echo "📁 Ensuring download directories exist on the host..."
-mkdir -p "$DOWNLOADS_DIR"/movies
-mkdir -p "$DOWNLOADS_DIR"/shows
-mkdir -p "$INCOMPLETE_DIR"
+sudo mkdir -p "$DOWNLOADS_DIR"/movies
+sudo mkdir -p "$DOWNLOADS_DIR"/shows
+sudo mkdir -p "$DOWNLOADS_DIR"/incomplete
 
 # Set permissions
 sudo chown "$USER":"$USER" "$DOWNLOADS_DIR"
-sudo chown "$USER":"$USER" "$INCOMPLETE_DIR"
+sudo chown "$USER":"$USER" "$DOWNLOADS_DIR"/incomplete
 sudo chown "$USER":"$USER" "$DOWNLOADS_DIR"/movies
 sudo chown "$USER":"$USER" "$DOWNLOADS_DIR"/shows
 

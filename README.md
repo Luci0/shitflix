@@ -124,9 +124,6 @@ See video for instructions: https://www.youtube.com/watch?v=Gf45f5cW6c4&t=329s
 # Save location for completed downloads
 DOWNLOADS_DIR="/home/${USER}/Downloads/shitflix"
 
-# Temporary location of incomplete downloads
-INCOMPLETE_DIR="/home/${USER}/Downloads/incomplete"
-
 # Filelist username
 FL_USERNAME="Mclovin"
 
