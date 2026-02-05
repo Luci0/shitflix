@@ -9,6 +9,9 @@ services:
     env_file:
       - .env
 
+    cpu_shares: 4096
+    blkio_config:
+      weight: 900
     volumes:
       # Named volumes for persistent configuration and cache data
       - jellyfin-config:/config
@@ -33,6 +36,8 @@ services:
     ports:
       - "9091:9091"
       - "7069:7069"
+    blkio_config:
+      weight: 200
     volumes:
       - ${DOWNLOADS_DIR}:/downloads
       - transmission-config:/config
