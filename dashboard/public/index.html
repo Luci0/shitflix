@@ -44,9 +44,15 @@
                 <input type="text" id="movie" name="movie" placeholder="Enter movie name..."/>
             </div>
 
-            <div class="form-group">
-                <label for="extra">Extra Search Params</label>
-                <input type="text" id="extra" name="extra" value="1080" placeholder="Quality, year, etc..."/>
+            <div class="search-params-row">
+                <div class="form-group half-width">
+                    <label for="extra">Quality/Extra</label>
+                    <input type="text" id="extra" name="extra" value="1080" placeholder="Quality, year, etc..."/>
+                </div>
+                <div class="form-group half-width">
+                    <label for="codec">Codec</label>
+                    <input type="text" id="codec" name="codec" placeholder="264, 265, etc..."/>
+                </div>
             </div>
 
             <button class="search-btn"
@@ -201,6 +207,19 @@
         }
     });
 
+    document.getElementById('codec').addEventListener('input', function (e) {
+        const cursorPosition = e.target.selectionStart;
+        const originalValue = e.target.value;
+        const newValue = originalValue.replace(/\s+/g, '.');
+
+        if (originalValue !== newValue) {
+            e.target.value = newValue;
+            // Maintain cursor position after replacement
+            const newCursorPosition = cursorPosition - (originalValue.length - newValue.length);
+            e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+        }
+    });
+
     function setVals() {
         const movieInput = document.getElementById('movie');
         const movie = movieInput.value.trim();
@@ -247,7 +266,8 @@
         document.body.addEventListener('htmx:configRequest', function (evt) {
             if (evt.detail.elt === searchBtn) {
                 const movie = document.getElementById('movie').value.trim();
-                const extra = document.getElementById('extra').value;
+                const extra = document.getElementById('extra').value.trim();
+                const codec = document.getElementById('codec').value.trim();
 
                 // Check if movie is empty and cancel the request
                 if (!movie) {
@@ -267,6 +287,7 @@
                 // Update the parameters with current values
                 evt.detail.parameters.movie = movie;
                 evt.detail.parameters.extra = extra;
+                evt.detail.parameters.codec = codec;
             }
         });
     });

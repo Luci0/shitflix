@@ -43,6 +43,16 @@ h1 {
     margin-bottom: 1.5rem;
 }
 
+.search-params-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.half-width {
+    flex: 1;
+}
+
 label {
     display: block;
     color: #b0b0b0;

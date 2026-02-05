@@ -36,11 +36,15 @@ app.get('/get-search-results', (req, res) => {
     // Replace spaces with dots for torrent search compatibility
     const movie = (req.query.movie ?? '').replace(/\s+/g, '.')
     const extra = (req.query.extra ?? '').replace(/\s+/g, '.')
+    const codec = (req.query.codec ?? '').replace(/\s+/g, '.')
 
     // Use array form to properly handle special characters
     let cmdArray = ['-z', '-q', movie];
     if (extra) {
         cmdArray.push('-Q', extra);
+    }
+    if (codec) {
+        cmdArray.push('-c', codec);
     }
 
     let dldScript = spawnSync(dldScriptPath, cmdArray, {
