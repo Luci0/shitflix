@@ -1,94 +1,47 @@
 # Agent Guidelines for Shitflix
 
-This document provides instructions for agentic coding agents working on the Shitflix repository.
+## 🚨 Critical Context
+- **Environment:** Primarily designed to run within Docker. Many paths are absolute and assume a `/shitflix` mount point (e.g., `/shitflix/scripts/...`).
+- **Tooling:** Shell scripts in `scripts/` heavily rely on `jq` for JSON processing.
+- **Secrets:** API keys are stored in `./secrets/*.txt`. In Docker, they are mounted via Docker secrets (e.g., `/run/secrets/tmdb-api-key`).
+- **Data Stores:**
+  - Wishlist/Banlist: `scripts/txts/wishlist.txt` and `scripts/txts/banlist.txt`.
+  - Downloads: Configured via `DOWNLOADS_DIR` in `.env`.
 
-## 1. Build, Lint, and Test Commands
-
-The project consists of a Node.js dashboard, shell scripts, and a Docker-based infrastructure.
+## 🛠 Commands
 
 ### Dashboard (Node.js)
 - **Location:** `dashboard/`
-- **Install Dependencies:**
-  ```bash
-  npm install
-  ```
-- **Run Development:**
-  ```bash
-  node api-backend.js
-  ```
-  *(Note: Runs on port defined in `DASHBOARD_PORT` env var or 7069)*
-
-- **Linting:**
-  - Currently, no specific linter (like ESLint) is configured in `package.json`.
-  - Agents should follow standard JavaScript best practices.
-
-- **Testing:**
-  - No automated test suite (e.g., Jest, Mocha) is currently set up in `package.json`.
-  - **Manual Verification:** Start the dashboard and query endpoints (e.g., `curl http://localhost:7069/`).
-  - **Script Verification:** Shell scripts in `scripts/` can be tested individually by running them with appropriate arguments, ensuring environment variables are set.
+- **Install:** `npm install` (inside `dashboard/`)
+- **Run Dev:** `node api-backend.js` (inside `dashboard/`)
+- **Port:** `DASHBOARD_PORT` (default: `7069`)
 
 ### Infrastructure (Docker)
-- **Start Services:**
-  ```bash
-  docker-compose up -d
-  ```
-- **Stop Services:**
-  ```bash
-  docker-compose down
-  ```
-- **Logs:**
-  ```bash
-  docker-compose logs -f
-  ```
+- **Up:** `docker-compose up -d`
+- **Down:** `docker-compose down`
+- **Logs:** `docker-compose logs -f`
 
 ### Scripts (Shell)
 - **Location:** `scripts/`
-- **Execution:** Scripts are generally executed by the `shitflix-runner` container or manually.
+- **Main Orchestrator:** `shitflix-runner.sh` (runs nightly sync)
 - **Key Scripts:**
-  - `generate-wishlist.sh`: Fetches trending content.
-  - `wishlist-processor.sh`: Processes the wishlist against trackers.
-  - `shitflix-runner.sh`: Orchestrates the sync process.
+  - `generate-wishlist.sh`: Fetches trending content via `tmdb.sh`.
+  - `wishlist-processor.sh`: Processes wishlist against trackers.
 
-## 2. Code Style & Conventions
+## 💻 Code Style & Conventions
 
 ### JavaScript (Dashboard)
-- **Format:** Standard JS, no TypeScript.
-- **Imports:** Use CommonJS `require()`.
-- **Async/Await:** Prefer `async/await` over raw promises/callbacks for file I/O and asynchronous logic.
-- **Error Handling:**
-  - Wrap async route handlers in `try/catch`.
-  - Log errors to `console.error`.
-  - Return appropriate HTTP status codes (e.g., 500 for server errors, 400 for bad input).
-- **Naming:**
-  - Variables/Functions: `camelCase`.
-  - Constants: `UPPER_SNAKE_CASE` (mostly for environment variables).
-  - Filenames: `kebab-case` (e.g., `api-backend.js`).
-- **Path Handling:** Always use `path.join()` or `path.resolve()` for file paths to ensure cross-platform compatibility (though primarily targets Linux/Docker).
-- **Environment Variables:** Access via `process.env`. Provide defaults where possible (e.g., `process.env.PORT || 7069`).
+- **Format:** Standard JS, CommonJS (`require`).
+- **Async:** Prefer `async/await`.
+- **Errors:** Wrap async handlers in `try/catch`; log to `console.error`.
+- **HTML:** Uses server-side string concatenation for simplicity.
 
 ### Shell Scripts
-- **Shebang:** Always use `#!/bin/sh` or `#!/bin/bash`.
-- **Variables:**
-  - Quote variables to prevent word splitting: `"$VAR"`.
-  - Use descriptive variable names: `script_dir`, `wishlist_path`.
-- **Error Handling:**
-  - Check exit codes where critical.
-  - Ensure scripts have executable permissions (`chmod +x`).
+- **Shebang:** `#!/bin/sh` or `#!/bin/bash`.
+- **Variables:** Always quote: `"$VAR"`.
+- **Paths:** Use `realpath "$(dirname -- "$0")"` to resolve script directories.
 
-### General
-- **File Structure:**
-  - `dashboard/`: Node.js web interface.
-  - `scripts/`: Core logic and automation scripts.
-  - `secrets/`: Sensitive data (API keys) - **NEVER COMMIT CONTENTS**.
-  - `txts/`: Data files (wishlist, banlist).
-- **Hardcoding:** Avoid hardcoding paths. Use relative paths derived from `__dirname` or script location.
-- **HTML/Frontend:** The dashboard uses server-side string concatenation for HTML (simple implementation). Maintain this style for consistency unless a major refactor is requested.
-- **Logging:** Use `console.log` for standard info and `console.error` for errors.
-
-## 3. Specific Agent Rules
-
-- **Read-Only First:** Always inspect files before modifying.
-- **Environment:** Respect existing `.env` structure. Do not introduce new required variables without updating documentation.
-- **Docker:** If modifying `docker-compose.yaml`, ensure service names and volumes align with the documented architecture.
-- **Secrets:** Never log or output API keys found in `secrets/`.
-- **Path Construction:** When using file tools, always resolve to absolute paths based on the project root.
+## 🛡 Rules
+- **Secrets:** NEVER log or output contents of `secrets/`.
+- **Paths:** When working locally, resolve paths relative to the repo root. When writing code for the container, respect the `/shitflix` prefix.
+- **Read-Only:** Always inspect files before modification.

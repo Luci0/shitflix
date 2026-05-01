@@ -1,0 +1,13 @@
+{
+  "name": "shitflix-e2e",
+  "version": "1.0.0",
+  "description": "E2E tests for shitflix",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^25.6.0",
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "test": "playwright test"
+  }
+}

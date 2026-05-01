@@ -1,0 +1,29 @@
+<div class="wishlist-modal-content">
+    <div class="wishlist-header">
+        <h2>📝 Movie Wishlist</h2>
+        <button class="close-wishlist-btn">&times;</button>
+    </div>
+    <div class="wishlist-description">
+        <p><strong>About the Wishlist:</strong></p>
+        <p>The wishlist is updated nightly and when running the sync action.</p>
+        <p>It's recommended that you add the movie name followed by the year (Ex: The.Matrix.1999).</p>
+        <p>Items are removed from the wishlist after downloading. </p>
+        <p>Old items from the wishlist are automaticly cleared after a while. (Default 3 months)</p>
+        <p class="wishlist-warning">⚠️ <strong>Warning:</strong>
+            Keep you wishlists fairly small. (Max ~100 items) </p>
+    </div>
+    <div class="wishlist-add-section">
+        <div class="add-form-row">
+            <select id="add-type" class="add-input">
+                <option value="m">🎬 Movie</option>
+                <option value="s">📺 Series</option>
+            </select>
+            <input type="text" id="add-name" class="add-input" placeholder="Movie.Name.Here">
+            <input type="text" id="add-quality" class="add-input add-quality" placeholder="1080" value="1080">
+            <button id="add-wishlist-btn" class="add-btn">➕ Add</button>
+        </div>
+    </div>
+    <div class="wishlist-body">
+        <div id="wishlist-content"></div>
+    </div>
+</div>

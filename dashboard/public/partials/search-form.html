@@ -1,0 +1,28 @@
+<div class="search-form">
+    <form onsubmit="return false;">
+        <div class="form-group">
+            <label for="movie">Movie Name</label>
+            <input type="text" id="movie" name="movie" placeholder="Enter movie name..."/>
+        </div>
+
+        <div class="search-params-row">
+            <div class="form-group half-width">
+                <label for="extra">Quality/Extra</label>
+                <input type="text" id="extra" name="extra" value="1080" placeholder="Quality, year, etc..."/>
+            </div>
+            <div class="form-group half-width">
+                <label for="codec">Codec</label>
+                <input type="text" id="codec" name="codec" placeholder="264, 265, etc..."/>
+            </div>
+        </div>
+
+        <button class="search-btn"
+                hx-get="/get-search-results"
+                hx-trigger="click"
+                hx-swap="innerHTML"
+                hx-target="#search-results-container"
+                hx-indicator=".loading">
+            🔍 Search
+        </button>
+    </form>
+</div>

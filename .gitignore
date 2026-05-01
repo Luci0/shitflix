@@ -1,5 +1,7 @@
 .idea/
 .env
+graphify-out/
+
 secrets/
 
 scripts/txts/banlist.txt
@@ -10,3 +12,6 @@ scripts/logs/crons.log
 scripts/logs/transmission.log
 
 dashboard/node_modules
+tests/e2e/node_modules/
+tests/e2e/playwright-report/
+tests/e2e/test-results/

@@ -1,0 +1,25 @@
+<div class="banlist-modal-content">
+    <div class="banlist-header">
+        <h2>🚫 Media Banlist</h2>
+        <button class="close-banlist-btn">&times;</button>
+    </div>
+    <div class="banlist-description">
+        <p><strong>About the Banlist:</strong></p>
+        <p>Media is automatically added to the banlist after it was downloaded.</p>
+        <p>This prevents downloading the same item twice and helps with API spam.</p>
+    </div>
+    <div class="banlist-add-section">
+        <div class="add-form-row">
+            <select id="ban-type" class="add-input">
+                <option value="m">🎬 Movie</option>
+                <option value="s">📺 Series</option>
+            </select>
+            <input type="text" id="ban-name" class="add-input" placeholder="Movie.Name.Here">
+            <input type="text" id="ban-quality" class="add-input add-quality" placeholder="1080" value="1080">
+            <button id="add-banlist-btn" class="add-btn">➕ Add</button>
+        </div>
+    </div>
+    <div class="banlist-body">
+        <div id="banlist-content"></div>
+    </div>
+</div>
