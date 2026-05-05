@@ -16,6 +16,12 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
+  webServer: {
+    command: 'node api-backend.js',
+    cwd: '../../dashboard',
+    url: 'http://localhost:7069/',
+    reuseExistingServer: !process.env.CI,
+  },
   projects: [
     {
       name: 'chromium',
