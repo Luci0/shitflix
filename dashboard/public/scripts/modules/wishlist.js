@@ -1,5 +1,8 @@
 import { state } from './state.js';
 
+/**
+ * Fetch wishlist from server and render the modal table.
+ */
 export function loadWishlist() {
     fetch('/get-wishlist')
         .then(response => response.json())
@@ -27,6 +30,10 @@ export function loadWishlist() {
         });
 }
 
+/**
+ * Delete a wishlist entry by index and reload the list.
+ * @param {number|string} index - Line index to delete
+ */
 export function deleteWishlistItem(index) {
     fetch('/delete-wishlist-item', {
         method: 'POST',
@@ -38,6 +45,9 @@ export function deleteWishlistItem(index) {
     });
 }
 
+/**
+ * Add a new item to the wishlist from the form inputs.
+ */
 export function addWishlistItem() {
     const type = document.getElementById('add-type').value;
     const name = document.getElementById('add-name').value.replace(/\s+/g, '.');

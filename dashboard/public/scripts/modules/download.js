@@ -1,7 +1,12 @@
 import { state } from './state.js';
 
+/** Articles to skip when generating download location suggestions */
 const ARTICLES = ['the', 'a', 'an'];
 
+/**
+ * Render download-location suggestion chips based on movie name.
+ * @param {string} name - The movie/series name to match against saved locations
+ */
 function renderSuggestions(name) {
     const container = document.getElementById('location-suggestions');
     const input = document.getElementById('download-location');
@@ -37,12 +42,21 @@ function renderSuggestions(name) {
     });
 }
 
+/**
+ * Persist a name→location mapping in localStorage.
+ * @param {string} name - Torrent display name
+ * @param {string} location - Chosen download directory
+ */
 function saveLocationMapping(name, location) {
     const mappings = JSON.parse(localStorage.getItem('download_locations') || '{}');
     mappings[name] = location;
     localStorage.setItem('download_locations', JSON.stringify(mappings));
 }
 
+/**
+ * Handle clicks on any `.download-btn` — open the download modal.
+ * @param {MouseEvent} evt
+ */
 export function handleDownloadClick(evt) {
     if (evt.target.classList.contains('download-btn')) {
         evt.preventDefault();
@@ -56,6 +70,10 @@ export function handleDownloadClick(evt) {
     }
 }
 
+/**
+ * Handle confirmation of a pending download — fire HTMX request.
+ * @param {MouseEvent} evt
+ */
 export function handleConfirmDownload(evt) {
     if (evt.target.id === 'confirm-download') {
         if (state.pendingDownload) {
@@ -73,6 +91,10 @@ export function handleConfirmDownload(evt) {
     }
 }
 
+/**
+ * Handle cancellation — close modal and clear pending download.
+ * @param {MouseEvent} evt
+ */
 export function handleCancelDownload(evt) {
     if (evt.target.id === 'cancel-download') {
         document.getElementById('download-modal').classList.remove('show');
@@ -80,6 +102,9 @@ export function handleCancelDownload(evt) {
     }
 }
 
+/**
+ * Close the preloader modal after at least 1.5s have elapsed.
+ */
 export function handlePreloaderTimeout() {
     if (state.modalShowTime > 0) {
         const elapsedTime = Date.now() - state.modalShowTime;

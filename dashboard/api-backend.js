@@ -2,22 +2,36 @@ const express = require('express');
 const {spawnSync} = require('child_process');
 const path = require('path');
 
+/** Express application instance */
 const app = express();
+/** @type {number} Dashboard server port from env or default */
 const port = process.env.DASHBOARD_PORT || 7069;
 
+/** @type {string} Path to the torrent search script */
 const dldScriptPath = '/shitflix/scripts/dld.sh';
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/**
+ * Serve the main dashboard page.
+ * @route GET /
+ */
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
+/**
+ * Start a torrent download via transmission-remote.
+ * @route GET /download-torrent
+ * @param {string} req.query.link - Torrent magnet/URL
+ * @param {string} req.query.name - Human-readable movie name
+ * @param {string} [req.query.saveDir] - Target directory
+ */
 app.get('/download-torrent', (req, res) => {
     let downloadLink = req.query.link;
     let movieName = req.query.name;
-    let saveDir = req.query.saveDir || '/downloads/movies'; // Use provided dir or default
+    let saveDir = req.query.saveDir || '/downloads/movies';
 
     console.log('Download link:', downloadLink);
     console.log('Save directory:', saveDir);
@@ -32,6 +46,13 @@ app.get('/download-torrent', (req, res) => {
     }
 })
 
+/**
+ * Search for torrents via the dld.sh script and return HTML table.
+ * @route GET /get-search-results
+ * @param {string} req.query.movie - Movie name (spaces → dots)
+ * @param {string} [req.query.extra] - Extra search qualifier
+ * @param {string} [req.query.codec] - Codec filter
+ */
 app.get('/get-search-results', (req, res) => {
     // Replace spaces with dots for torrent search compatibility
     const movie = (req.query.movie ?? '').replace(/\s+/g, '.')
@@ -116,6 +137,10 @@ app.get('/get-search-results', (req, res) => {
 
 const fs = require('fs').promises;
 
+/**
+ * Read and return the wishlist file as JSON.
+ * @route GET /get-wishlist
+ */
 app.get('/get-wishlist', async (req, res) => {
     try {
         const wishlistPath = '/shitflix/scripts/txts/wishlist.txt';
@@ -143,6 +168,11 @@ app.get('/get-wishlist', async (req, res) => {
     }
 });
 
+/**
+ * Delete a wishlist entry and optionally add to banlist.
+ * @route POST /delete-wishlist-item
+ * @param {number} req.body.index - Line index to remove
+ */
 app.post('/delete-wishlist-item', async (req, res) => {
     try {
         const { index } = req.body;
@@ -208,6 +238,13 @@ app.post('/delete-wishlist-item', async (req, res) => {
     }
 });
 
+/**
+ * Add a new item to the wishlist.
+ * @route POST /add-wishlist-item
+ * @param {string} req.body.type - 'm' for movie, 's' for series
+ * @param {string} req.body.name - Media name
+ * @param {string} req.body.quality - Resolution (e.g. '1080')
+ */
 app.post('/add-wishlist-item', async (req, res) => {
     try {
         const { type, name, quality } = req.body;
@@ -254,7 +291,10 @@ app.post('/add-wishlist-item', async (req, res) => {
     }
 });
 
-// Replace the existing /run-sync endpoint with this SSE version
+/**
+ * Stream sync script output via Server-Sent Events.
+ * @route GET /run-sync-stream
+ */
 app.get('/run-sync-stream', (req, res) => {
     // Set up SSE headers
     res.writeHead(200, {
@@ -326,6 +366,10 @@ app.get('/run-sync-stream', (req, res) => {
     }
 });
 
+/**
+ * Read and return the banlist file as JSON.
+ * @route GET /get-banlist
+ */
 app.get('/get-banlist', async (req, res) => {
     try {
         const banlistPath = '/shitflix/scripts/txts/banlist.txt';
@@ -353,6 +397,11 @@ app.get('/get-banlist', async (req, res) => {
     }
 });
 
+/**
+ * Delete a banlist entry by index.
+ * @route POST /delete-banlist-item
+ * @param {number} req.body.index - Line index to remove
+ */
 app.post('/delete-banlist-item', async (req, res) => {
     try {
         const { index } = req.body;
@@ -380,6 +429,13 @@ app.post('/delete-banlist-item', async (req, res) => {
     }
 });
 
+/**
+ * Add a new item to the banlist.
+ * @route POST /add-banlist-item
+ * @param {string} req.body.type - 'm' for movie, 's' for series
+ * @param {string} req.body.name - Media name
+ * @param {string} req.body.quality - Resolution (e.g. '1080')
+ */
 app.post('/add-banlist-item', async (req, res) => {
     try {
         const { type, name, quality } = req.body;

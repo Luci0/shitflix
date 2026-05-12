@@ -1,5 +1,8 @@
 import { state } from './state.js';
 
+/**
+ * Fetch banlist from server and render the modal table.
+ */
 export function loadBanlist() {
     fetch('/get-banlist')
         .then(response => response.json())
@@ -27,6 +30,10 @@ export function loadBanlist() {
         });
 }
 
+/**
+ * Delete a banlist entry by index and reload the list.
+ * @param {number|string} index - Line index to delete
+ */
 export function deleteBanlistItem(index) {
     fetch('/delete-banlist-item', {
         method: 'POST',
@@ -38,6 +45,9 @@ export function deleteBanlistItem(index) {
     });
 }
 
+/**
+ * Add a new item to the banlist from the form inputs.
+ */
 export function addBanlistItem() {
     const type = document.getElementById('ban-type').value;
     const name = document.getElementById('ban-name').value.replace(/\s+/g, '.');

@@ -5,6 +5,10 @@ import { loadBanlist, deleteBanlistItem, addBanlistItem } from './banlist.js';
 import { showSyncModal, runSync } from './sync.js';
 import { handleDownloadClick, handleConfirmDownload, handleCancelDownload, handlePreloaderTimeout } from './download.js';
 
+/**
+ * Initialize all event listeners using delegation on document.body.
+ * Handles inputs, HTMX request config, clicks, Escape key, swaps, and touchstart tooltips.
+ */
 export function initEventListeners() {
     // --- Event Delegation for Inputs ---
     document.body.addEventListener('input', function (e) {

@@ -1,5 +1,8 @@
 import { state } from './state.js';
 
+/**
+ * Show the sync modal and populate with previous logs or status.
+ */
 export function showSyncModal() {
     const modal = document.getElementById('sync-modal');
     modal.classList.add('show');
@@ -26,6 +29,9 @@ export function showSyncModal() {
     }
 }
 
+/**
+ * Start the sync process via EventSource (SSE) and stream logs live.
+ */
 export function runSync() {
     const button = document.getElementById('run-sync-btn');
     const logsDiv = document.getElementById('sync-logs');
