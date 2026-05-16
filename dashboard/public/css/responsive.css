@@ -37,13 +37,17 @@
         font-size: 1rem;
     }
     .service-buttons {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
         gap: 0.5rem;
     }
     .service-btn {
         width: 100%;
         font-size: 1.1rem;
         padding: 1rem;
+    }
+    #wishlist-btn, #banlist-btn {
+        width: calc(50% - 0.25rem);
     }
     .modal-icon {
         width: 120px;
