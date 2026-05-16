@@ -18,8 +18,9 @@
         min-width: unset;
     }
     .wishlist-header, .banlist-header, .sync-header {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
         padding: 1rem;
         gap: 0.5rem;
     }
