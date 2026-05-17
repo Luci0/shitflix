@@ -36,13 +36,6 @@ app.get('/download-torrent', (req, res) => {
     console.log('Download link:', downloadLink);
     console.log('Save directory:', saveDir);
 
-    // Check if already downloading
-    let listScript = spawnSync('transmission-remote', ['-l'], {encoding: 'utf8'});
-    if (listScript.stdout && listScript.stdout.includes(movieName)) {
-        res.send(`⚠️ ${movieName} is already being downloaded!`);
-        return;
-    }
-
     let downloadScript = spawnSync('transmission-remote', ['-w', saveDir, '-a', downloadLink], {encoding: 'utf8'})
     console.log(downloadScript.stdout)
     console.log(downloadScript.stderr)
