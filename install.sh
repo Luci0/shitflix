@@ -198,7 +198,10 @@ sudo chown "$USER":"$USER" "$DOWNLOADS_DIR"/shows
 
 echo "✅ Download directories are set up."
 
-# 5. Run docker compose up
+# 5. Ensure data dirs exist for bind mounts (so docker doesn't create as root)
+mkdir -p ./scripts/txts ./config/transmission ./config/jellyfin
+
+# 6. Run docker compose up
 echo ""
 echo "🚀 Starting app with docker compose up -d..."
 echo "(This may take a while as images are downloaded/built)"

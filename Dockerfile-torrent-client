@@ -34,7 +34,7 @@ ENV RUNNER_CRON_SCHEDULE="0 3 * * *"
 
 EXPOSE 9091 7069
 
-VOLUME ["/downloads", "/config", "/shitflix"]
+VOLUME ["/downloads", "/config"]
 
 # The entrypoint will run as root to set up cron, then switch to the 'shitflix' user.
 ENTRYPOINT ["/shitflix/scripts/entrypoint.sh"]

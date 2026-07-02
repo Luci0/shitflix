@@ -13,8 +13,8 @@ services:
     blkio_config:
       weight: 900
     volumes:
-      # Named volumes for persistent configuration and cache data
-      - jellyfin-config:/config
+      # Bind mount for configuration (cache stays as named volume)
+      - ./config/jellyfin:/config
       - jellyfin-cache:/cache
 
       # Bind mounts for media libraries (Source:Target)
@@ -40,8 +40,8 @@ services:
       weight: 200
     volumes:
       - ${DOWNLOADS_DIR}:/downloads
-      - transmission-config:/config
-      - shitflix:/shitflix
+      - ./config/transmission:/config
+      - ./scripts/txts:/shitflix/scripts/txts
     env_file:
       - .env
     secrets:
@@ -50,9 +50,6 @@ services:
     restart: unless-stopped
 
 volumes:
-  transmission-config:
-  shitflix:
-  jellyfin-config:
   jellyfin-cache:
 
 secrets:

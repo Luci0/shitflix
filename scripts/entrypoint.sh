@@ -10,7 +10,7 @@ printenv | while IFS='=' read -r key value; do
 done > /etc/environment
 
 # Create a wrapper script that properly exports environment before running
-cat > /shitflix/scripts/cron-wrapper.sh << 'EOF'
+cat > /tmp/cron-wrapper.sh << 'EOF'
 #!/bin/sh
 # Source the environment file to get all variables
 set -a  # Mark all new variables for export
@@ -24,10 +24,10 @@ set +a  # Turn off auto-export
 # Fix ownership so shitflix user can access the files
 chown shitflix:shitflix /shitflix/scripts/txts/wishlist.txt /shitflix/scripts/txts/banlist.txt
 EOF
-chmod +x /shitflix/scripts/cron-wrapper.sh
+chmod +x /tmp/cron-wrapper.sh
 
 # Create the crontab file for the root user
-echo "$RUNNER_CRON_SCHEDULE /shitflix/scripts/cron-wrapper.sh >> /var/log/cron.log 2>&1" > /etc/crontabs/root
+echo "$RUNNER_CRON_SCHEDULE /tmp/cron-wrapper.sh >> /var/log/cron.log 2>&1" > /etc/crontabs/root
 
 # Create log file with proper permissions
 touch /var/log/cron.log

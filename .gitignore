@@ -3,6 +3,8 @@
 graphify-out/
 
 secrets/
+backups/
+config/
 
 scripts/txts/banlist.txt
 scripts/txts/temp_twish.txt
