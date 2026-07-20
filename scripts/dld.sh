@@ -142,8 +142,8 @@ fi
 
 api_result=$(echo "$raw_result" | jq 'sort_by(.size)
 | .[]
-| select (.category == "Filme HD-RO" or .category == "Filme HD" or .category == "Seriale HD" or .category == "Seriale HD-RO"
- or .category == "Filme Blu-Ray" or .category == "Filme DVD")
+| select (.category == "Movies HD-RO" or .category == "Movies HD" or .category == "Movies 4K" or .category == "Movies 4K Blu-Ray"
+ or .category == "TV-Series HD" or .category == "TV-Series HD-RO" or .category == "Movies Blu-Ray" or .category == "Movies DVD")
 | {name, seeders, download_link, size, imdb, category, sizeInGb: (.size/1073741824)}')
 
 # Escape special regex characters from the movie name
