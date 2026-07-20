@@ -4,6 +4,20 @@ import { state } from './state.js';
 const ARTICLES = ['the', 'a', 'an'];
 
 /**
+ * Fetch the default download location from the backend.
+ * @returns {Promise<string>} Default directory path
+ */
+async function fetchDefaultLocation() {
+    try {
+        const res = await fetch('/config/download-location');
+        const data = await res.json();
+        return data.defaultLocation;
+    } catch {
+        return '/downloads/movies';
+    }
+}
+
+/**
  * Render download-location suggestion chips based on movie name.
  * @param {string} name - The movie/series name to match against saved locations
  */
@@ -67,6 +81,14 @@ export function handleDownloadClick(evt) {
         };
         document.getElementById('download-modal').classList.add('show');
         renderSuggestions(state.pendingDownload.name);
+
+        const input = document.getElementById('download-location');
+        const mappings = JSON.parse(localStorage.getItem('download_locations') || '{}');
+        if (mappings[state.pendingDownload.name]) {
+            input.value = mappings[state.pendingDownload.name];
+        } else {
+            fetchDefaultLocation().then(loc => { input.value = loc; });
+        }
     }
 }
 

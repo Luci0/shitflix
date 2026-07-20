@@ -10,8 +10,18 @@ const port = process.env.DASHBOARD_PORT || 7069;
 /** @type {string} Path to the torrent search script */
 const dldScriptPath = '/shitflix/scripts/dld.sh';
 
+const defaultDownloadDir = process.env.DEFAULT_DOWNLOAD_DIR || '/downloads';
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+
+/**
+ * Return the default download location for the UI.
+ * @route GET /config/download-location
+ */
+app.get('/config/download-location', (req, res) => {
+    res.json({ defaultLocation: `${defaultDownloadDir}/movies` });
+});
 
 /**
  * Serve the main dashboard page.
@@ -31,7 +41,7 @@ app.get('/', function (req, res) {
 app.get('/download-torrent', (req, res) => {
     let downloadLink = req.query.link;
     let movieName = req.query.name;
-    let saveDir = req.query.saveDir || '/downloads/movies';
+    let saveDir = req.query.saveDir || `${defaultDownloadDir}/movies`;
 
     console.log('Download link:', downloadLink);
     console.log('Save directory:', saveDir);

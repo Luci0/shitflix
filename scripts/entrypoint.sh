@@ -48,5 +48,5 @@ exec su-exec shitflix transmission-daemon \
     --allowed=*.*.*.* \
     --config-dir=/config \
     --rpc-bind-address=0.0.0.0 \
-    --download-dir=/downloads \
-    --incomplete-dir=/downloads/incomplete
+    --download-dir=${DEFAULT_DOWNLOAD_DIR:-/downloads} \
+    --incomplete-dir=${DEFAULT_DOWNLOAD_DIR:-/downloads}/incomplete

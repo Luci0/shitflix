@@ -130,6 +130,9 @@ cat > "$ENV_FILE" << EOF
 # Save location for completed downloads
 DOWNLOADS_DIR="${DOWNLOADS_DIR}"
 
+# Default download directory inside container
+DEFAULT_DOWNLOAD_DIR="/downloads"
+
 # Filelist username
 FL_USERNAME="${FL_USERNAME}"
 
