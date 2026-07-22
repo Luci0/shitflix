@@ -126,7 +126,7 @@ fi
 debug_echo "Using FL_USERNAME: $FL_USERNAME"
 debug_echo "Using PASSKEY: $PASSKEY"
 
-raw_result=$(curl -s "https://filelist.io/api.php?username=$FL_USERNAME&passkey=$PASSKEY&action=search-torrents&type=name&query=$movieName")
+raw_result=$(curl -s "https://filelist.io/api.php?username=$FL_USERNAME&passkey=$PASSKEY&action=search-torrents&type=name&category=19,4,6,26,21,27,20,2,3&query=$movieName")
 
 debug_echo "Raw API result:\n $raw_result"
 error_result=$(echo "$raw_result" | jq '.error' 2>/dev/null)
@@ -142,8 +142,6 @@ fi
 
 api_result=$(echo "$raw_result" | jq 'sort_by(.size)
 | .[]
-| select (.category == "Movies HD-RO" or .category == "Movies HD" or .category == "Movies 4K" or .category == "Movies 4K Blu-Ray"
- or .category == "TV-Series HD" or .category == "TV-Series HD-RO" or .category == "Movies Blu-Ray" or .category == "Movies DVD")
 | {name, seeders, download_link, size, imdb, category, sizeInGb: (.size/1073741824)}')
 
 # Escape special regex characters from the movie name
