@@ -21,8 +21,6 @@ CUTOFF_DATE_FMT=$(date -d "$CUTOFF_DATE_STR" +%F)
 echo "CUTOFF_DATE is $CUTOFF_DATE_FMT"
 
 # Log run header to crons.log
-echo "=== RUN $(date +%F_%H:%M:%S) ===" >> "$script_dir/logs/crons.log"
-
 # Set a trap to clean up the temp file on script exit (error, interrupt, etc.)
 trap 'rm -f "$TEMP_FILE"; exit 1' INT TERM EXIT
 
