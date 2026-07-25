@@ -1,0 +1,140 @@
+.report-btn {
+    background: linear-gradient(135deg, #607d8b 0%, #455a64 100%);
+}
+
+.report-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(96, 125, 139, 0.4);
+}
+
+.report-modal-content {
+    background-color: #242424;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.report-header h2 {
+    margin: 0;
+    color: #e0e0e0;
+}
+
+.close-report-btn {
+    background: none;
+    border: none;
+    color: #e0e0e0;
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.close-report-btn:hover {
+    color: #fff;
+}
+
+.report-body {
+    overflow-y: auto;
+    flex: 1;
+}
+
+.report-loading {
+    text-align: center;
+    color: #b0b0b0;
+    padding: 40px;
+    font-size: 1.1rem;
+}
+
+.report-timestamp {
+    background: #1a1a1a;
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: #b0b0b0;
+    margin-bottom: 20px;
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+.report-section {
+    margin-bottom: 20px;
+}
+
+.report-section-title {
+    margin: 0 0 10px 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.report-added-title {
+    color: #4caf50;
+}
+
+.report-downloaded-title {
+    color: #2196f3;
+}
+
+.report-removed-title {
+    color: #ff9800;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.report-item {
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+    word-break: break-word;
+}
+
+.report-added-item {
+    color: #81c784;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.report-downloaded-item {
+    color: #64b5f6;
+    background: rgba(33, 150, 243, 0.1);
+}
+
+.report-removed-item {
+    color: #ffb74d;
+    background: rgba(255, 152, 0, 0.1);
+}
+
+.report-empty-section {
+    color: #777;
+    font-style: italic;
+    font-size: 0.9rem;
+    padding: 8px 10px;
+}
+
+.report-empty {
+    text-align: center;
+    color: #b0b0b0;
+    padding: 40px;
+}
+
+.report-error {
+    text-align: center;
+    color: #e74c3c;
+    padding: 40px;
+}

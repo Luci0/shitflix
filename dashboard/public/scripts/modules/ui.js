@@ -3,6 +3,7 @@ import { state } from './state.js';
 import { loadWishlist, deleteWishlistItem, addWishlistItem } from './wishlist.js';
 import { loadBanlist, deleteBanlistItem, addBanlistItem } from './banlist.js';
 import { showSyncModal, runSync } from './sync.js';
+import { loadReport } from './report.js';
 import { handleDownloadClick, handleConfirmDownload, handleCancelDownload, handlePreloaderTimeout } from './download.js';
 
 /**
@@ -63,6 +64,9 @@ export function initEventListeners() {
         if (evt.target.id === 'sync-btn') {
             showSyncModal();
         }
+        if (evt.target.id === 'report-btn') {
+            loadReport();
+        }
 
         // Modal Close Buttons
         if (evt.target.classList.contains('close-wishlist-btn')) {
@@ -73,6 +77,9 @@ export function initEventListeners() {
         }
         if (evt.target.classList.contains('close-sync-btn')) {
             document.getElementById('sync-modal').classList.remove('show');
+        }
+        if (evt.target.classList.contains('close-report-btn')) {
+            document.getElementById('report-modal').classList.remove('show');
         }
 
         // Delete Wishlist Item
@@ -112,7 +119,8 @@ export function initEventListeners() {
         if (evt.target === document.getElementById('wishlist-modal') || 
             evt.target === document.getElementById('banlist-modal') ||
             evt.target === document.getElementById('sync-modal') ||
-            evt.target === document.getElementById('download-modal')) {
+            evt.target === document.getElementById('download-modal') ||
+            evt.target === document.getElementById('report-modal')) {
             evt.target.classList.remove('show');
             if (evt.target.id === 'download-modal') state.pendingDownload = null;
         }
@@ -123,7 +131,7 @@ export function initEventListeners() {
     // Keyboard Escape
     document.body.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
-            ['wishlist-modal', 'banlist-modal', 'sync-modal', 'download-modal'].forEach(id => {
+            ['wishlist-modal', 'banlist-modal', 'sync-modal', 'download-modal', 'report-modal'].forEach(id => {
                 const modal = document.getElementById(id);
                 if (modal && modal.classList.contains('show')) modal.classList.remove('show');
             });

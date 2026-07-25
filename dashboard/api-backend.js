@@ -492,6 +492,68 @@ app.post('/add-banlist-item', async (req, res) => {
     }
 });
 
+/**
+ * Read and return the last nightly run report from crons.log.
+ * @route GET /last-run-report
+ */
+app.get('/last-run-report', async (req, res) => {
+    try {
+        const logPath = '/shitflix/scripts/logs/crons.log';
+        let content = '';
+        try {
+            content = await fs.readFile(logPath, 'utf8');
+        } catch (error) {
+            return res.json({ timestamp: null, added: [], downloaded: [], removed: [] });
+        }
+
+        if (!content.trim()) {
+            return res.json({ timestamp: null, added: [], downloaded: [], removed: [] });
+        }
+
+        const lines = content.split('\n');
+
+        // Find the last === RUN line
+        let lastRunIdx = -1;
+        for (let i = lines.length - 1; i >= 0; i--) {
+            if (lines[i].startsWith('=== RUN ')) {
+                lastRunIdx = i;
+                break;
+            }
+        }
+
+        if (lastRunIdx === -1) {
+            return res.json({ timestamp: null, added: [], downloaded: [], removed: [] });
+        }
+
+        // Extract timestamp from RUN header
+        const runHeader = lines[lastRunIdx];
+        const timestamp = runHeader.replace(/^=== RUN (.*) ===$/, '$1');
+
+        // Parse lines after the RUN header
+        const added = [];
+        const downloaded = [];
+        const removed = [];
+
+        for (let i = lastRunIdx + 1; i < lines.length; i++) {
+            const line = lines[i];
+            if (line.startsWith('=== RUN ')) break; // next run started
+
+            if (line.startsWith('ADDED ')) {
+                added.push(line.substring(6));
+            } else if (line.startsWith('DOWNLOADED ')) {
+                downloaded.push(line.substring(11));
+            } else if (line.startsWith('REMOVED ')) {
+                removed.push(line.substring(8));
+            }
+        }
+
+        res.json({ timestamp, added, downloaded, removed });
+    } catch (error) {
+        console.error('Error reading run report:', error);
+        res.status(500).json({ timestamp: null, added: [], downloaded: [], removed: [] });
+    }
+});
+
 
 
 app.listen(port);

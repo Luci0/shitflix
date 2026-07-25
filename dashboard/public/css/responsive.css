@@ -47,7 +47,7 @@
         font-size: 1.1rem;
         padding: 1rem;
     }
-    #wishlist-btn, #banlist-btn {
+    #wishlist-btn, #banlist-btn, #sync-btn, #report-btn {
         width: calc(50% - 0.25rem);
     }
     .modal-icon {

@@ -59,6 +59,7 @@ do
     if [ "$resultCount" -le "$threshold" ] && [ "$resultCount" -gt 0 ]; then
       "$script_dir/dld.sh" "-$type" -x -q "$query" -Q "$quality" > /dev/null
       echo 'Download added. Removing from wishlist & adding to banlist.'
+      echo "DOWNLOADED $line" >> "$script_dir/logs/crons.log"
       echo "$line" >> "$script_dir/txts/banlist.txt"
       "$script_dir/remove-duplicates.sh" "$script_dir/txts/banlist.txt"
     else

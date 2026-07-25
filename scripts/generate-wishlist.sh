@@ -88,9 +88,11 @@ do
   cnt=$(alreadyDownloaded "$line")
   if [ "$cnt" -gt 0 ]; then
 	echo "$line already found in wishlist or banlist ($cnt)"
+	echo "SKIPPED $line (count=$cnt)" >> "$script_dir/logs/crons.log"
   fi
   if [ "$cnt" -eq 0 ]; then
 	echo "Added $line to wishlist $TWISH"
+	echo "ADDED $line" >> "$script_dir/logs/crons.log"
   	echo "$line" >> "$TWISH"
   fi
 done < "$TEMP_TWISH"

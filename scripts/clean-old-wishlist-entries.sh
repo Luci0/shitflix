@@ -20,6 +20,9 @@ CUTOFF_DATE_FMT=$(date -d "$CUTOFF_DATE_STR" +%F)
 
 echo "CUTOFF_DATE is $CUTOFF_DATE_FMT"
 
+# Log run header to crons.log
+echo "=== RUN $(date +%F_%H:%M:%S) ===" >> "$script_dir/logs/crons.log"
+
 # Set a trap to clean up the temp file on script exit (error, interrupt, etc.)
 trap 'rm -f "$TEMP_FILE"; exit 1' INT TERM EXIT
 
@@ -43,6 +46,7 @@ while IFS= read -r line; do
             echo "$line" >> "$TEMP_FILE"
         else
 	   echo "$line was removed due to being older than $CUTOFF_DATE_FMT"
+           echo "REMOVED $line" >> "$script_dir/logs/crons.log"
         fi
     else
         # If date format is invalid, keep the line
