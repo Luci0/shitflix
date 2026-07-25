@@ -28,6 +28,10 @@ export class DashboardPage {
   readonly downloadCancelButton: Locator;
   readonly downloadLocation: Locator;
   readonly preloaderModal: Locator;
+  readonly reportButton: Locator;
+  readonly reportModal: Locator;
+  readonly reportContent: Locator;
+  readonly reportLoading: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -57,6 +61,10 @@ export class DashboardPage {
     this.downloadCancelButton = page.locator('#cancel-download');
     this.downloadLocation = page.locator('#download-location');
     this.preloaderModal = page.locator('#preloader-modal');
+    this.reportButton = page.locator('#report-btn');
+    this.reportModal = page.locator('#report-modal');
+    this.reportContent = page.locator('#report-content');
+    this.reportLoading = page.locator('#report-loading');
   }
 
   async goto() {
@@ -69,8 +77,9 @@ export class DashboardPage {
     await this.searchInput.fill(movie);
     await this.searchExtra.fill(extra);
     await this.searchCodec.fill(codec);
+    const responsePromise = this.page.waitForResponse(resp => resp.url().includes('/get-search-results'));
     await this.searchButton.click();
-    await this.page.waitForResponse(resp => resp.url().includes('/get-search-results'));
+    await responsePromise;
     await this.searchResults.waitFor({ state: 'visible' });
   }
 
@@ -121,5 +130,10 @@ export class DashboardPage {
   async confirmDownload(location: string) {
     await this.downloadLocation.fill(location);
     await this.downloadConfirmButton.click();
+  }
+
+  async openReport() {
+    await this.reportButton.click();
+    await this.reportModal.waitFor({ state: 'visible' });
   }
 }
