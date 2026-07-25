@@ -68,6 +68,13 @@ test.describe('Feature: Suggestion Chips from LocalStorage', () => {
     await page.route('**/delete-banlist-item', async (route) => {
         await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true }) });
     });
+    await page.route('**/config/download-location', async (route) => {
+        await route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({ defaultLocation: '/downloads/movies' }),
+        });
+    });
     await page.route('**/download-torrent*', async (route) => {
         await route.fulfill({ status: 200, contentType: 'text/html', body: '<div id="download-result-container">Download started!</div' });
     });
@@ -141,6 +148,9 @@ test.describe('Feature: Suggestion Chips from LocalStorage', () => {
     // Act: Open download modal for the movie
     await dashboard.search('The Matrix');
     await dashboard.downloadFirstResult();
+
+    // Wait for async fetchDefaultLocation to populate the input
+    await expect(dashboard.downloadLocation).toHaveValue('/downloads/movies');
 
     // Act: Enter location and confirm
     await dashboard.downloadLocation.fill(newLocation);
