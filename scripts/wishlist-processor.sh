@@ -61,7 +61,6 @@ do
       echo 'Download added. Removing from wishlist & adding to banlist.'
       echo "DOWNLOADED $line" >> "$script_dir/logs/crons.log"
       echo "$line" >> "$script_dir/txts/banlist.txt"
-      "$script_dir/remove-duplicates.sh" "$script_dir/txts/banlist.txt"
     else
       # If the item is not processed, keep it in the wishlist
       echo "$line" >> "$temp_file"
@@ -69,6 +68,8 @@ do
 
     echo '------------------------------------'
 done < "$file"
+
+"$script_dir/remove-duplicates.sh" "$script_dir/txts/banlist.txt"
 
 # If the loop completes successfully, replace the original file.
 mv "$temp_file" "$file"
