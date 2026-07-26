@@ -90,6 +90,10 @@
     color: #ff9800;
 }
 
+.report-processed-title {
+    color: #ab47bc;
+}
+
 .report-list {
     list-style: none;
     padding: 0;
@@ -118,6 +122,11 @@
 .report-removed-item {
     color: #ffb74d;
     background: rgba(255, 152, 0, 0.1);
+}
+
+.report-processed-item {
+    color: #ce93d8;
+    background: rgba(171, 71, 188, 0.1);
 }
 
 .report-empty-section {

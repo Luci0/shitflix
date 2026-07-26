@@ -503,11 +503,11 @@ app.get('/last-run-report', async (req, res) => {
         try {
             content = await fs.readFile(logPath, 'utf8');
         } catch (error) {
-            return res.json({ timestamp: null, added: [], downloaded: [], removed: [] });
+            return res.json({ timestamp: null, added: [], downloaded: [], removed: [], processed: [] });
         }
 
         if (!content.trim()) {
-            return res.json({ timestamp: null, added: [], downloaded: [], removed: [] });
+            return res.json({ timestamp: null, added: [], downloaded: [], removed: [], processed: [] });
         }
 
         const lines = content.split('\n');
@@ -522,7 +522,7 @@ app.get('/last-run-report', async (req, res) => {
         }
 
         if (lastRunIdx === -1) {
-            return res.json({ timestamp: null, added: [], downloaded: [], removed: [] });
+            return res.json({ timestamp: null, added: [], downloaded: [], removed: [], processed: [] });
         }
 
         // Extract timestamp from RUN header
@@ -533,6 +533,7 @@ app.get('/last-run-report', async (req, res) => {
         const added = [];
         const downloaded = [];
         const removed = [];
+        const processed = [];
 
         for (let i = lastRunIdx + 1; i < lines.length; i++) {
             const line = lines[i];
@@ -544,13 +545,18 @@ app.get('/last-run-report', async (req, res) => {
                 downloaded.push(line.substring(11));
             } else if (line.startsWith('REMOVED ')) {
                 removed.push(line.substring(8));
+            } else {
+                const resultMatch = line.match(/^(\d+)\s+(.+)$/);
+                if (resultMatch) {
+                    processed.push({ query: resultMatch[2], count: parseInt(resultMatch[1], 10) });
+                }
             }
         }
 
-        res.json({ timestamp, added, downloaded, removed });
+        res.json({ timestamp, added, downloaded, removed, processed });
     } catch (error) {
         console.error('Error reading run report:', error);
-        res.status(500).json({ timestamp: null, added: [], downloaded: [], removed: [] });
+        res.status(500).json({ timestamp: null, added: [], downloaded: [], removed: [], processed: [] });
     }
 });
 

@@ -53,7 +53,7 @@ export async function loadReport() {
 
         // Removed section
         html += `<div class="report-section">`;
-        html += `<h3 class="report-section-title report-removed-title">Removed - 3 Month Cutoff (${data.removed.length})</h3>`;
+        html += `<h3 class="report-section-title report-removed-title">Removed (${data.removed.length})</h3>`;
         if (data.removed.length > 0) {
             html += '<ul class="report-list">';
             data.removed.forEach(item => {
@@ -62,6 +62,20 @@ export async function loadReport() {
             html += '</ul>';
         } else {
             html += '<div class="report-empty-section">No old entries removed</div>';
+        }
+        html += '</div>';
+
+        // Processed section
+        html += `<div class="report-section">`;
+        html += `<h3 class="report-section-title report-processed-title">Processed (${data.processed.length})</h3>`;
+        if (data.processed.length > 0) {
+            html += '<ul class="report-list">';
+            data.processed.forEach(item => {
+                html += `<li class="report-item report-processed-item">> ${item.query} (${item.count} results)</li>`;
+            });
+            html += '</ul>';
+        } else {
+            html += '<div class="report-empty-section">No items processed</div>';
         }
         html += '</div>';
 

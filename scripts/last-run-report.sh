@@ -1,7 +1,7 @@
 #!/bin/sh
 
 script_dir=$(realpath "$(dirname -- "$0")")
-LOG_FILE="$script_dir/logs/crons.log"
+LOG_FILE="${1:-$script_dir/logs/crons.log}"
 
 if [ ! -f "$LOG_FILE" ]; then
   echo "No runs recorded yet. Log file not found: $LOG_FILE"
@@ -36,10 +36,12 @@ added_count=0
 downloaded_count=0
 removed_count=0
 skipped_count=0
+processed_count=0
 
 added_list=""
 downloaded_list=""
 removed_list=""
+processed_list=""
 
 # Parse each line by prefix
 echo "$run_content" | while IFS= read -r line; do
@@ -71,6 +73,7 @@ skipped_count=0
 added_file=$(mktemp)
 downloaded_file=$(mktemp)
 removed_file=$(mktemp)
+processed_file=$(mktemp)
 
 while IFS= read -r line; do
   case "$line" in
@@ -85,6 +88,10 @@ while IFS= read -r line; do
     REMOVED\ *)
       removed_count=$((removed_count + 1))
       echo "$line" | sed 's/^REMOVED //' >> "$removed_file"
+      ;;
+    [0-9]*)
+      processed_count=$((processed_count + 1))
+      echo "$line" >> "$processed_file"
       ;;
   esac
 done < "$tmpfile"
@@ -127,7 +134,19 @@ else
 fi
 echo ""
 
+echo "--- PROCESSED ($processed_count) ---"
+if [ "$processed_count" -gt 0 ]; then
+  while IFS= read -r item; do
+    count=$(echo "$item" | cut -d' ' -f1)
+    query=$(echo "$item" | cut -d' ' -f2-)
+    echo "  > $query ($count results)"
+  done < "$processed_file"
+else
+  echo "  (none)"
+fi
+echo ""
+
 echo "================================================"
 
 # Cleanup
-rm -f "$tmpfile" "$added_file" "$downloaded_file" "$removed_file"
+rm -f "$tmpfile" "$added_file" "$downloaded_file" "$removed_file" "$processed_file"
