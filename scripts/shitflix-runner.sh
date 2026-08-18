@@ -2,6 +2,7 @@
 
 script_dir=$(realpath "$(dirname -- "$0")")
 
+mkdir -p "$script_dir/logs"
 : > "$script_dir/logs/crons.log"
 : > "$script_dir/logs/transmission.log"
 echo "=== RUN $(date +%F_%H:%M:%S) ===" >> "$script_dir/logs/crons.log"

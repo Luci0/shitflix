@@ -33,6 +33,9 @@ echo "$RUNNER_CRON_SCHEDULE /tmp/cron-wrapper.sh >> /var/log/cron.log 2>&1" > /e
 touch /var/log/cron.log
 chmod 666 /var/log/cron.log
 
+mkdir -p /shitflix/scripts/logs
+chmod 777 /shitflix/scripts/logs
+
 # Start crond in foreground mode in background
 crond -f &
 
