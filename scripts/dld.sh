@@ -30,6 +30,7 @@ Options:
   -x                 : Execute the download of the best result. (Requires -m or -s to be set). The best result is the
                         smallest file that matches the search criteria.
   -d                 : Enable debug mode.
+  -z                 : Enable fzf mode. Disables default prefix filtering on results.
   -f <path>          : Path to the .env file to source.
 EOF
 }
