@@ -1,0 +1,15 @@
+services:
+  jellyfin:
+    volumes:
+      - ${DOWNLOADS_DIR}/flac:/flac
+      - /mnt/slow1/movies:/movies_og
+      - /mnt/slow1/shows:/shows_og
+      - /mnt/slow3/movies:/movies3
+      - /mnt/slow3/shows:/shows3
+      - /mnt/slow3/music:/music3
+
+  torrent-client:
+    volumes:
+      - /mnt/slow3:/downloads3
+      - /mnt/slow1/movies:/movies_og
+      - /mnt/slow1/shows:/shows_og
